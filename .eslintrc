@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "brace-style": ["error", "stroustrup"],
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "none"],
+    "no-trailing-spaces": "error",
+    "no-unused-vars": "error"
+  }
+}
