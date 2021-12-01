@@ -4,26 +4,31 @@
   "description": "Package with integrated CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and more.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "dynamic-dns": "dist/binary/main.js"
+  },
   "scripts": {
     "build": "yarn lint && rimraf ./dist && tsc",
-    "lint": "eslint ./src ./examples --ext .ts"
+    "lint": "eslint ./src --ext .ts"
   },
   "files": [
     "dist"
   ],
   "repository": "https://github.com/Vexcited/dynamic-dns",
+  "homepage": "https://github.com/Vexcited/dynamic-dns",
   "author": "Vexcited <vexitofficial@gmail.com>",
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "@types/node": "^16.7.10",
-    "@typescript-eslint/eslint-plugin": "^4.30.0",
-    "@typescript-eslint/parser": "^4.30.0",
-    "eslint": "^7.32.0",
+    "@types/node": "^16.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.3.0",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.2"
+    "typescript": "^4.5.2"
   },
   "dependencies": {
-    "got": "^11.8.2"
+    "got": "^11.8.2",
+    "node-fetch": "^3.1.0"
   }
 }

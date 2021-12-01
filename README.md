@@ -1,24 +1,20 @@
 # dynamic-dns
 
-CLI and API for dynamic DNS configuration on Cloudflare,
-Namecheap or even Netlify and Vercel. 
+> API and CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and more.
 
-## Warning: Project under development !
+## Development
 
-### Updates
-
-- 01/09/2021: *Really* started this project. The development process will be slow
-because I'm going back to school on 02/09.
-
+**This project is still under development ! Please wait until the v1.0.0 release.** 
 ## Installation
 
-You can install this module globally or for a specific project.
+You can install this module **globally** or **in a specific project**.
 
 ### Install globally
 
 ```bash
 # With Yarn
 yarn global add dynamic-dns
+
 # With NPM
 npm install --global dynamic-dns
 ```
@@ -27,6 +23,7 @@ npm install --global dynamic-dns
 ```bash
 # With Yarn
 yarn add dynamic-dns
+
 # With NPM
 npm install --save dynamic-dns
 ```
@@ -37,4 +34,8 @@ npm install --save dynamic-dns
 
 ## API
 
-*In build...*
+`dynamic-dns` has built-in types so you can also use it with TypeScript.
+
+You can see the API documentation for each providers.
+- [Cloudflare](./docs/cloudflare.md)
+

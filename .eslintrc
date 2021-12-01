@@ -11,8 +11,10 @@
   "rules": {
     "brace-style": ["error", "stroustrup"],
     "semi": ["error", "always"],
-    "comma-dangle": ["error", "none"],
+    "comma-dangle": ["error", "never"],
     "no-trailing-spaces": "error",
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "no-tabs": "error",
+    "indent": ["error", 2]
   }
 }
