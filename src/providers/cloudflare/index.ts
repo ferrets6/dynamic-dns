@@ -1,9 +1,10 @@
 import type {
   CloudflareInstanceOptions,
   CloudflareListZonesProps,
+  CloudflareListZonesResponse,
   CloudflareUpdateDnsRecordProps
 } from "./types";
-import got from "got";
+import got, { HTTPError } from "got";
 
 export class CloudflareApi {
   private api: typeof got;
@@ -45,18 +46,29 @@ export class CloudflareApi {
     page = 1,
     per_page = 20
   }: CloudflareListZonesProps) {
-    if (page < 1) throw Error("Page can't be under 1. 1 is the minimum value.");
+    if (page < 1) throw Error("Page can't be under 1 as it's the minimum value.");
     if (per_page > 50) throw Error("You can't show more than 50 results per page.");
     if (per_page < 5) throw Error("You can't show less than 5 results per page.");
 
-    const body = await this.api.get("zones", {
-      searchParams: {
-        name,
-        page,
-        per_page
+    try {
+      const body = await this.api.get("zones", {
+        searchParams: {
+          name,
+          page,
+          per_page
+        }
+      }).json<CloudflareListZonesResponse>();
+
+      return body;
+    }
+    catch (error) {
+      if (error instanceof HTTPError) {
+        const body: CloudflareListZonesResponse = JSON.parse(error.response.body as string);
+        throw new Error(`[CloudflareApi/listZones] ${error.response.statusCode} => ${body.errors[0].message}.`);
       }
-    }).json();
-    console.log(body);
+
+      throw error;
+    }
   }
 
   public async updateDnsRecord ({
@@ -78,10 +90,11 @@ export class CloudflareApi {
           ...(proxied && { proxied })
         }
       }).json();
-      console.log(res);
+
+      return res;
     }
     catch (error) {
-      console.error(error);
+      // this.handleError(error);
     }
   }
 }

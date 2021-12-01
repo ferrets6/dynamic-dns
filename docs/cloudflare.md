@@ -14,8 +14,6 @@ To login, you have [two methods](https://dash.cloudflare.com/profile/api-tokens)
 - Token (more secure)
 - Auth Keys
 
-You can't give both at the same time.
-
 If you're doing a `token`, don't forget to give these permissions:
 - `dns_records:edit`
 - `zone:read`
@@ -38,13 +36,33 @@ const cloudfalre = new CloudflareApi({
 You can list all your zones by running this.
 All the parameters are optionnal.
 
+#### Example
+
 ```typescript
-const zones = await api.listZones({
-  name: "example.com",
-  per_page: 10,
-  page: 2
-});
+try {
+  const zones = await api.listZones({
+    name: "example.com",
+    per_page: 10,
+    page: 1
+  });
+
+  // Get the first result.
+  const zone = zones.result[0];
+
+  // Retreive its content.
+  const zoneId = zone.id;
+  const zoneName = zone.name;
+  const zoneCreatedOn = new Date(zone.created_on);
+
+  console.info(zoneId, zoneName, zoneCreatedOn);
+}
+catch(e) {
+  // Error handling.
+  console.error(e);
+}
 ```
+
+#### Parameters
 
 - `name`: *optional* => Zone's name.
 - `page`: *optional* => Current page. With **page > 1**. Default value is `1`.
