@@ -52,9 +52,10 @@ try {
   // Retreive its content.
   const zoneId = zone.id;
   const zoneName = zone.name;
+  const zoneAccountId = zone.account.id;
   const zoneCreatedOn = new Date(zone.created_on);
 
-  console.info(zoneId, zoneName, zoneCreatedOn);
+  console.info(zoneAccountId, zoneId, zoneName, zoneCreatedOn);
 }
 catch(e) {
   // Error handling.

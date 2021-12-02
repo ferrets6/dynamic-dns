@@ -29,6 +29,7 @@ export type CloudflareListZonesProps = {
   per_page?: number; // Default: 20 ; Number of zones per page.
 }
 
+// GET "zones"
 export type CloudflareListZonesResponse = {
   success: boolean;
   errors: CloudflareError[];
@@ -40,9 +41,31 @@ export type CloudflareListZonesResponse = {
     type: string;
     development_mode: number;
     name_servers: string[];
+    original_name_servers: string[];
     modified_on: string;
     created_on: string;
     activated_on: string;
+    permissions: string[];
+    owner: {
+      id: string;
+      type: string;
+      email: string;
+    };
+    meta: {
+      step: number;
+      wildcard_proxiable: false;
+      custom_certificate_quota: number;
+      page_rule_quota: number;
+      phishing_detected: boolean;
+      multiple_railguns_allowed: boolean;
+    };
+    account: {
+      id: string;
+      name: string;
+    };
+    plan: {
+      id: string;
+    }
   }[];
   result_info?: {
     page: number;
