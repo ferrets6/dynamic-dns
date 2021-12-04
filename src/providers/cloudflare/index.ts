@@ -103,7 +103,10 @@ export class CloudflareApi {
     name,
     order,
     page = 1,
-    per_page = 20
+    per_page = 20,
+    direction,
+    proxied,
+    type
   }: CloudflareListZoneDnsRecordsProps) {
     if (page < 1) throw Error("Page can't be under 1 as it's the minimum value.");
     if (per_page > 100) throw Error("You can't show more than 100 results per page.");
@@ -117,7 +120,10 @@ export class CloudflareApi {
           name,
           order,
           page,
-          per_page
+          per_page,
+          direction,
+          proxied,
+          type
         }
       }).json<CloudflareListZoneDnsRecordsResponse>();
 

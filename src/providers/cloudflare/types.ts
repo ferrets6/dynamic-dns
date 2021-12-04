@@ -30,9 +30,218 @@ type CloudflareResponseResultInfo = {
   total_pages: number;
 }
 
-/** Strongly typing all the DNS record types. */
-type CloudflareDnsRecordTypes =
-  "A"
+type CloudflareZoneStatus = "active"
+  | "pending"
+  | "initializing"
+  |  "moved"
+  |  "deleted"
+  | "deactivated";
+
+/** Defining DNS record properties from https://api.cloudflare.com/#dns-records-for-a-zone-properties. */
+type CloudflareDnsRecord = {
+  id: string;
+  name: string;
+  proxiable: boolean;
+  proxied: boolean;
+  /** 3600 is default value. 1 is for "Automatic". */
+  ttl: number;
+  locked: number;
+  zone_id: string;
+  zone_name: string;
+  created_on: string;
+  modified_on: string;
+  meta: {
+    auto_added: boolean;
+    source: string;
+  };
+}
+
+export interface CloudflareDnsRecordA extends CloudflareDnsRecord {
+  type: "A";
+  content: string;
+}
+
+export interface CloudflareDnsRecordAAAA extends CloudflareDnsRecord {
+  type: "AAAA";
+  content: string;
+}
+
+export interface CloudflareDnsRecordCNAME extends CloudflareDnsRecord {
+  type: "CNAME";
+  content: string;
+}
+
+export interface CloudflareDnsRecordHTTPS extends CloudflareDnsRecord {
+  type: "HTTPS";
+  content: string;
+
+  data: {
+    /** Minimum value: 0 ; Maximum value: 65535 */
+    priority: number;
+    target: string;
+    value: string;
+  }
+}
+
+export interface CloudflareDnsRecordNS extends CloudflareDnsRecord {
+  type: "NS";
+  content: string;
+}
+
+export interface CloudflareDnsRecordMX extends CloudflareDnsRecord {
+  type: "MX";
+  content: string;
+}
+
+export interface CloudflareDnsRecordTXT extends CloudflareDnsRecord {
+  type: "TXT";
+  content: string;
+}
+
+export interface CloudflareDnsRecordLOC extends CloudflareDnsRecord {
+  type: "LOC";
+  content: string;
+
+  /** Components of a LOC record. */
+  data: {
+    size: number;
+    altitude: number;
+    long_degrees: number;
+    lat_degrees: number;
+    precision_horz: number;
+    precision_vert: number;
+    long_direction: "E" | "W";
+    lat_direction: "N" | "S";
+    long_minutes: number;
+    long_seconds: number;
+    lat_minutes: number;
+    lat_seconds: number;
+  }
+}
+
+export interface CloudflareDnsRecordSRV extends CloudflareDnsRecord {
+  type: "SRV";
+  content: string;
+
+  data: {
+    service: string;
+    proto: string;
+    name: string;
+    priority: number;
+    weight: number;
+    port: number;
+    target: string;
+  }
+}
+
+export interface CloudflareDnsRecordCERT extends CloudflareDnsRecord {
+  type: "CERT";
+  content?: string;
+
+  data: {
+    type: number;
+    key_tag: number;
+    algorithm: number;
+    certificate: string;
+  };
+}
+
+export interface CloudflareDnsRecordDNSKEY extends CloudflareDnsRecord {
+  type: "DNSKEY";
+  content?: string;
+
+  data: {
+    flags: number;
+    protocol: number;
+    algorithm: number;
+    public_key: string;
+  };
+}
+
+export interface CloudflareDnsRecordDS extends CloudflareDnsRecord {
+  type: "DS";
+  content?: string;
+
+  data: {
+    key_tag: number;
+    algorithm: number;
+    digest_type: number;
+    digest: string;
+  };
+}
+
+export interface CloudflareDnsRecordNAPTR extends CloudflareDnsRecord {
+  type: "NAPTR";
+  content?: string;
+
+  data: {
+    order: number;
+    preference: number;
+    flags: string;
+    service: string;
+    regex: string;
+    replacement: string;
+  };
+}
+
+export interface CloudflareDnsRecordSMIMEA extends CloudflareDnsRecord {
+  type: "SMIMEA";
+  content?: string;
+
+  data: {
+    usage: number;
+    selector: number;
+    matching_type: number;
+    certificate: string;
+  };
+}
+
+export interface CloudflareDnsRecordSSHFP extends CloudflareDnsRecord {
+  type: "SSHFP";
+  content?: string;
+
+  data: {
+    algorithm: number;
+    type: number;
+    fingerprint: string;
+  };
+}
+
+export interface CloudflareDnsRecordSVCB extends CloudflareDnsRecord {
+  type: "SVCB";
+  content?: string;
+
+  data: {
+    priority: number;
+    target: string;
+    value: string;
+  };
+}
+
+export interface CloudflareDnsRecordTLSA extends CloudflareDnsRecord {
+  type: "TLSA";
+  content?: string;
+
+  data: {
+    usage: number;
+    selector: number;
+    matching_type: number;
+    certificate: string;
+  };
+}
+
+export interface CloudflareDnsRecordURI extends CloudflareDnsRecord {
+  type: "URI";
+  content?: string;
+
+  data: {
+    weight: number;
+    content: string;
+  };
+}
+
+/** Same as CloudflareDnsRecordTypes but in string format. */
+export type CloudflareDnsRecordTypesString = "A"
   | "AAAA"
   | "CNAME"
   | "HTTPS"
@@ -51,7 +260,25 @@ type CloudflareDnsRecordTypes =
   | "TLSA"
   | "URI";
 
-type CloudflareZoneStatus = "active" | "pending" | "initializing" |  "moved" |  "deleted" | "deactivated";
+/** Strongly typing all the DNS record types. */
+export type CloudflareDnsRecordTypes = CloudflareDnsRecordA
+  | CloudflareDnsRecordAAAA
+  | CloudflareDnsRecordCNAME
+  | CloudflareDnsRecordHTTPS
+  | CloudflareDnsRecordNS
+  | CloudflareDnsRecordMX
+  | CloudflareDnsRecordTXT
+  | CloudflareDnsRecordLOC
+  | CloudflareDnsRecordSRV
+  | CloudflareDnsRecordCERT
+  | CloudflareDnsRecordDNSKEY
+  | CloudflareDnsRecordDS
+  | CloudflareDnsRecordNAPTR
+  | CloudflareDnsRecordSMIMEA
+  | CloudflareDnsRecordSSHFP
+  | CloudflareDnsRecordSVCB
+  | CloudflareDnsRecordTLSA
+  | CloudflareDnsRecordURI;
 
 /**
  * Function: this.api.listZones();
@@ -77,7 +304,10 @@ export type CloudflareListZonesProps = {
   direction?: "asc" | "desc";
 }
 
-/** Defining zone property from https://api.cloudflare.com/#zone-properties. */
+/**
+ * Defining zone properties from https://api.cloudflare.com/#zone-properties.
+ * `plan`, `meta`, `pending-plan` aren't typed because unnecessary here.
+ */
 export interface CloudflareListZonesResponse extends CloudflareResponse {
   result: {
     id: string;
@@ -92,6 +322,7 @@ export interface CloudflareListZonesResponse extends CloudflareResponse {
      * - `partial`: Partner-hosted zone or a CNAME setup.
      */
     type: "full" | "partial";
+
     /**
      * Interval, in seconds, from when development mode
      * expires (positive integer) or last expired (negative integer)
@@ -127,15 +358,6 @@ export interface CloudflareListZonesResponse extends CloudflareResponse {
       name?: string;
     };
 
-    meta: {
-      step: number;
-      wildcard_proxiable: false;
-      custom_certificate_quota: number;
-      page_rule_quota: number;
-      phishing_detected: boolean;
-      multiple_railguns_allowed: boolean;
-    };
-
     /** Information about the account the zone belongs to. */
     account: {
       id: string;
@@ -146,7 +368,7 @@ export interface CloudflareListZonesResponse extends CloudflareResponse {
 }
 
 /**
- * Function: this.api.listZones();
+ * Function: this.api.listZoneDnsRecords();
  * API: GET zones/:zone_identifier/dns_records
  * Documentation: https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records
  */
@@ -164,7 +386,7 @@ export type CloudflareListZoneDnsRecordsProps = {
   /** DNS record content. */
   content?: string;
   /** DNS record type. */
-  type?: CloudflareDnsRecordTypes;
+  type?: CloudflareDnsRecordTypesString;
   /** DNS record proxied status. */
   proxied?: boolean;
 
@@ -176,28 +398,9 @@ export type CloudflareListZoneDnsRecordsProps = {
   direction?: "asc" | "desc";
 }
 
-// Response.
+/** Response of a zone's DNS records. */
 export interface CloudflareListZoneDnsRecordsResponse extends CloudflareResponse {
-  result: {
-    id: string;
-    zone_id: string;
-    zone_name: string;
-    name: string;
-    type: CloudflareDnsRecordTypes;
-    content: string;
-    proxiable: boolean;
-    proxied: boolean;
-    ttl: number; // 1 for Automatic ; 3600 is Default.
-    locked: boolean;
-    created_on: string;
-    modified_on: string;
-    meta: {
-      auto_added: boolean;
-      managed_by_apps: boolean;
-      managed_by_argo_tunnel: boolean;
-      source: string;
-    };
-  }[];
+  result: CloudflareDnsRecordTypes[];
   result_info: CloudflareResponseResultInfo;
 }
 
