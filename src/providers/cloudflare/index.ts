@@ -2,7 +2,9 @@ import type {
   CloudflareInstanceOptions,
   CloudflareListZonesProps,
   CloudflareListZonesResponse,
-  CloudflareUpdateDnsRecordProps
+  CloudflareListZoneDnsRecordsProps,
+  CloudflareUpdateDnsRecordProps,
+  CloudflareListZoneDnsRecordsResponse
 } from "./types";
 import got, { HTTPError } from "got";
 
@@ -41,8 +43,18 @@ export class CloudflareApi {
     }
   }
 
+  /**
+   * Listing all the user's zones.
+   * Adapated from https://api.cloudflare.com/#zone-list-zones.
+   */
   public async listZones ({
     name,
+    accountId,
+    accountName,
+    direction,
+    match = "all",
+    order,
+    status,
     page = 1,
     per_page = 20
   }: CloudflareListZonesProps) {
@@ -53,9 +65,22 @@ export class CloudflareApi {
     try {
       const body = await this.api.get("zones", {
         searchParams: {
+          // Check if match ?
+          match,
+
+          // Match requirements.
           name,
+          "account.id": accountId,
+          "account.name": accountName,
+          status,
+
+          // How many results per page.
           page,
-          per_page
+          per_page,
+
+          // How is returned results.
+          direction,
+          order
         }
       }).json<CloudflareListZonesResponse>();
 
@@ -67,6 +92,39 @@ export class CloudflareApi {
         throw new Error(`[CloudflareApi/listZones] ${error.response.statusCode} => ${body.errors[0].message}.`);
       }
 
+      throw error;
+    }
+  }
+
+  public async listZoneDnsRecords ({
+    zone_identifier,
+    match = "all",
+    content,
+    name,
+    order,
+    page = 1,
+    per_page = 20
+  }: CloudflareListZoneDnsRecordsProps) {
+    if (page < 1) throw Error("Page can't be under 1 as it's the minimum value.");
+    if (per_page > 100) throw Error("You can't show more than 100 results per page.");
+    if (per_page < 5) throw Error("You can't show less than 5 results per page.");
+
+    try {
+      const body = await this.api.get(`zones/${zone_identifier}/dns_records`, {
+        searchParams: {
+          match,
+          content,
+          name,
+          order,
+          page,
+          per_page
+        }
+      }).json<CloudflareListZoneDnsRecordsResponse>();
+
+      return body;
+    }
+    catch (error) {
+      console.error(error);
       throw error;
     }
   }

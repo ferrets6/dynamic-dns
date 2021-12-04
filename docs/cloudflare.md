@@ -8,15 +8,15 @@ const { CloudflareApi } = require("dynamic-dns");
 import { CloudflareApi } from "dynamic-dns";
 ```
 
-## Login
+## Use the Cloudflare provider
 
-To login, you have [two methods](https://dash.cloudflare.com/profile/api-tokens):
-- Token (more secure)
-- Auth Keys
+You can use [tokens (more secure) or auth-keys](https://dash.cloudflare.com/profile/api-tokens).
 
-If you're doing a `token`, don't forget to give these permissions:
+If you're using a `token`, don't forget to give these permissions.
 - `dns_records:edit`
 - `zone:read`
+
+### Example
 
 ```typescript
 // With a login token.
@@ -31,62 +31,45 @@ const cloudfalre = new CloudflareApi({
 });
 ```
 
-### List Zones
+## Listing your Cloudflare zones
 
-You can list all your zones by running this.
-All the parameters are optionnal.
+Adapted from <https://api.cloudflare.com/#zone-list-zones>.
+All the optional parameters are available.
 
-#### Example
+> Warning: if you want to add `account.name` or `account.id` parameters, you should use `accountName` and `accountId` instead.
+
+### Example
 
 ```typescript
 try {
   const zones = await api.listZones({
-    name: "example.com",
-    per_page: 10,
+    match: "all", // The zones returned should match with `name` and `accountName`.
+
+    name: "example.com", // Zone's name that should match.
+    accountName: "Vexcited", // Zone owner's name that should match.
+
+    per_page: 10, // I want to display 10 results per page.
+    direction: "desc", // I also want to have descending results.
     page: 1
   });
 
   // Get the first result.
   const zone = zones.result[0];
 
-  // Retreive its content.
+  // Retreive its informations.
   const zoneId = zone.id;
   const zoneName = zone.name;
   const zoneAccountId = zone.account.id;
   const zoneCreatedOn = new Date(zone.created_on);
 
+  // Log these informations.
   console.info(zoneAccountId, zoneId, zoneName, zoneCreatedOn);
 }
-catch(e) {
+catch (error) {
   // Error handling.
-  console.error(e);
+  console.error(error);
 }
 ```
 
-#### Parameters
+## Listing a zone's DNS records
 
-- `name`: *optional* => Zone's name.
-- `page`: *optional* => Current page. With **page > 1**. Default value is `1`.
-- `per_page`: *optional* => Number of results within a page. With **5 > per_page > 50**. Default value is `20`.
-
-## Updating a DNS record
-```typescript
-await cloudflare.updateDnsRecord({
-    zone_identifier: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    identifier: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-
-    content: "76.76.21.22",
-    name: "vexcited.me",
-    type: "A",
-    proxied: false,
-    ttl: 1 // 1 is for "automatic"
-});
-```
-
-- `zone_identifier`: Cloudflare Zone ID.
-- `identifier`: Your ID.
-- `name`: DNS Record's name.
-- `content`: DNS Record's content.
-- `type`: DNS Record content's type. (Here it's an IPv4 so I use "A" ; For IPv6, use "AAAA").
-- `ttl`: (optional) -> Default value is 3600. Here we use 1 for "automatic".
-- `proxied`: (optional) -> If this record is proxied by Cloudflare or not.
