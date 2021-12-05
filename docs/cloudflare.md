@@ -8,13 +8,14 @@ const { CloudflareApi } = require("dynamic-dns");
 import { CloudflareApi } from "dynamic-dns";
 ```
 
-## Use the Cloudflare provider
+## Set-up the Cloudflare Provider
 
 You can use [tokens (more secure) or auth-keys](https://dash.cloudflare.com/profile/api-tokens).
 
 If you're using a `token`, don't forget to give these permissions.
 - `dns_records:edit`
 - `zone:read`
+- `cache_purge:edit` (Optional) => Only if you need to purge all files of a zone from Cloudflare's cache.
 
 ### Example
 
@@ -25,13 +26,13 @@ const cloudflare = new CloudflareApi({
 });
 
 // With a auth key.
-const cloudfalre = new CloudflareApi({
+const cloudflare = new CloudflareApi({
   authEmail: "mail@example.com",
   authKey: "xxxxxxxxxxxxxxxxxxxxxxxx"
 });
 ```
 
-## Listing your Cloudflare zones
+## List your zones
 
 Adapted from <https://api.cloudflare.com/#zone-list-zones>.
 All the optional parameters are available.
@@ -42,7 +43,8 @@ All the optional parameters are available.
 
 ```typescript
 try {
-  const zones = await api.listZones({
+  // All the parameters here are optionnal. So, you can also do listZones({})
+  const { zones, resultInfo } = await cloudflare.listZones({
     match: "all", // The zones returned should match with `name` and `accountName`.
 
     name: "example.com", // Zone's name that should match.
@@ -53,17 +55,16 @@ try {
     page: 1
   });
 
-  // Get the first result.
-  const zone = zones.result[0];
+  // You can get informations about the current page, zones per page, zones count, ...
+  console.log(resultInfo); 
 
-  // Retreive its informations.
-  const zoneId = zone.id;
-  const zoneName = zone.name;
-  const zoneAccountId = zone.account.id;
-  const zoneCreatedOn = new Date(zone.created_on);
+  // Get the first zone.
+  const zone = zones[0];
 
-  // Log these informations.
-  console.info(zoneAccountId, zoneId, zoneName, zoneCreatedOn);
+  // You can extract the zone's informations with the `rawData` property.
+  const zoneName = zone.rawData.name; // string
+  const zoneNameServers = zone.rawData.name_servers; // string[]
+  console.log(zoneName, zoneNameServers);
 }
 catch (error) {
   // Error handling.
@@ -71,5 +72,34 @@ catch (error) {
 }
 ```
 
-## Listing a zone's DNS records
+## Get a zone from its ID
 
+```typescript
+try {
+  const zoneId = "xxxxxxxxxxxxxxxx";
+  const zone = await cloudflare.getZoneFromId(zoneId);
+
+  // You can extract the zone's informations with the `rawData` property.
+  const zoneName = zone.rawData.name; // string
+  const zoneNameServers = zone.rawData.name_servers; // string[]
+  console.log(zoneName, zoneNameServers);
+}
+catch (error) {
+  // Error handling.
+  console.error(error);
+}
+```
+
+
+## Purge all files from a zone
+
+```typescript
+  try {
+    const purged = await zone.purgeAllFiles();
+    console.log(purged); // returns true if okay.
+  }
+  catch (error) {
+    // Error handling.
+    console.error(error);
+  }
+```

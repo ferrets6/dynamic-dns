@@ -1,13 +1,13 @@
 import type {
+  CloudflareGetZoneFromIdResponse,
   CloudflareInstanceOptions,
-  CloudflareListZonesProps,
-  CloudflareListZonesResponse,
-  CloudflareListZoneDnsRecordsProps,
-  CloudflareUpdateDnsRecordProps,
-  CloudflareListZoneDnsRecordsResponse
-} from "./types";
-import got, { HTTPError } from "got";
 
+  CloudflareListZonesProps,
+  CloudflareListZonesResponse
+} from "./types/CloudflareApi";
+
+import got, { HTTPError } from "got";
+import CloudflareApiZone from "./Zone";
 export class CloudflareApi {
   private api: typeof got;
 
@@ -84,81 +84,38 @@ export class CloudflareApi {
         }
       }).json<CloudflareListZonesResponse>();
 
-      return body;
+      return {
+        zones: body.result.map(zone => new CloudflareApiZone(this.api, zone)),
+        resultInfo: body.result_info
+      };
     }
     catch (error) {
       if (error instanceof HTTPError) {
         const body: CloudflareListZonesResponse = JSON.parse(error.response.body as string);
-        throw new Error(`[CloudflareApi/listZones] ${error.response.statusCode} => ${body.errors[0].message}.`);
+        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
+
+        throw new Error(`Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
       }
 
       throw error;
     }
   }
 
-  public async listZoneDnsRecords ({
-    zone_identifier,
-    match = "all",
-    content,
-    name,
-    order,
-    page = 1,
-    per_page = 20,
-    direction,
-    proxied,
-    type
-  }: CloudflareListZoneDnsRecordsProps) {
-    if (page < 1) throw Error("Page can't be under 1 as it's the minimum value.");
-    if (per_page > 100) throw Error("You can't show more than 100 results per page.");
-    if (per_page < 5) throw Error("You can't show less than 5 results per page.");
-
+  public async getZoneFromId (zoneId: string) {
     try {
-      const body = await this.api.get(`zones/${zone_identifier}/dns_records`, {
-        searchParams: {
-          match,
-          content,
-          name,
-          order,
-          page,
-          per_page,
-          direction,
-          proxied,
-          type
-        }
-      }).json<CloudflareListZoneDnsRecordsResponse>();
+      const body = await this.api.get(`zones/${zoneId}`).json<CloudflareGetZoneFromIdResponse>();
 
-      return body;
+      return new CloudflareApiZone(this.api, body.result);
     }
     catch (error) {
-      console.error(error);
+      if (error instanceof HTTPError) {
+        const body: CloudflareGetZoneFromIdResponse = JSON.parse(error.response.body as string);
+        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
+
+        throw new Error(`Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
+      }
+
       throw error;
-    }
-  }
-
-  public async updateDnsRecord ({
-    zone_identifier,
-    identifier,
-    content,
-    name,
-    type,
-    ttl = 3600,
-    proxied
-  }: CloudflareUpdateDnsRecordProps) {
-    try {
-      const res = await this.api.put(`zones/${zone_identifier}/dns_records/${identifier}`, {
-        json: {
-          content,
-          name,
-          type,
-          ttl,
-          ...(proxied && { proxied })
-        }
-      }).json();
-
-      return res;
-    }
-    catch (error) {
-      // this.handleError(error);
     }
   }
 }
