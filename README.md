@@ -38,4 +38,5 @@ npm install --save dynamic-dns
 
 You can see the API documentation for each providers.
 - [Cloudflare](./docs/cloudflare.md)
+- [Namecheap](./docs/namecheap.md)
 
