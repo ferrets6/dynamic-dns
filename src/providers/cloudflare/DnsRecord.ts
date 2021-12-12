@@ -16,7 +16,6 @@ class CloudflareApiDnsRecord {
     this.rawData = rawData;
   }
 
-
 }
 
 export default CloudflareApiDnsRecord;

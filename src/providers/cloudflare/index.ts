@@ -99,7 +99,6 @@ export class CloudflareApi {
   public async getZoneFromId (zoneId: string) {
     try {
       const body = await this.api.get(`zones/${zoneId}`).json<CloudflareGetZoneFromIdResponse>();
-
       return new CloudflareApiZone(this.api, body.result);
     }
     catch (error) {

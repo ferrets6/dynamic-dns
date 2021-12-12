@@ -9,6 +9,8 @@ import type {
   CloudflareZoneCreateDnsRecordProps,
   CloudflareZoneCreateDnsRecordResponse,
 
+  CloudflareZoneGetRecordFromIdResponse,
+
   // this.listDnsRecords
   CloudflareZoneListDnsRecordsProps,
   CloudflareZoneListDnsRecordsResponse
@@ -29,6 +31,7 @@ class CloudflareApiZone {
     this.rawData = rawData;
   }
 
+  /** List all the DNS records of this zone. */
   public async listDnsRecords ({
     match = "all",
     content,
@@ -59,7 +62,21 @@ class CloudflareApiZone {
         }
       }).json<CloudflareZoneListDnsRecordsResponse>();
 
-      return body.result.map(record => new CloudflareApiDnsRecord(this.api, record));
+      return {
+        records: body.result.map(record => new CloudflareApiDnsRecord(this.api, record)),
+        resultInfo: body.result_info
+      };
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+
+  public async getRecordFromId (recordId: string) {
+    try {
+      const body = await this.api.get(`zones/${this.rawData.id}/dns_records/${recordId}`).json<CloudflareZoneGetRecordFromIdResponse>();
+      return new CloudflareApiDnsRecord(this.api, body.result);
     }
     catch (error) {
       handleError(error);
@@ -72,7 +89,7 @@ class CloudflareApiZone {
     type,
     name,
     content,
-    ttl = 1,
+    ttl = 1, // Defaults to "automatic".
     priority,
     proxied
   }: CloudflareZoneCreateDnsRecordProps) {
@@ -80,7 +97,7 @@ class CloudflareApiZone {
       throw Error("It's required to set `type`, `name` and `content properties.");
     }
 
-    // Check `priority`.
+    // Check `priority` for types "MX", "SRV" and "URI".
     if (type === "MX" || type === "SRV" || type === "URI") {
       if (!priority) throw Error("Property `priority` is required for MX, SRV and URI records.");
     }
@@ -100,6 +117,7 @@ class CloudflareApiZone {
           proxied
         }
       }).json<CloudflareZoneCreateDnsRecordResponse>();
+      console.log(body);
 
       return new CloudflareApiDnsRecord(this.api, body.result);
     }

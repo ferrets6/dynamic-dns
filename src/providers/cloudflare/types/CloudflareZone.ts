@@ -136,8 +136,10 @@ export type CloudflareZoneCreateDnsRecordProps = {
   proxied?: boolean;
 }
 
-/** Response of a zone's DNS records. */
 export interface CloudflareZoneCreateDnsRecordResponse extends CloudflareResponse {
   result: CloudflareDnsRecords;
-  result_info: CloudflareResponseResultInfo;
+}
+
+export interface CloudflareZoneGetRecordFromIdResponse extends CloudflareResponse {
+  result: CloudflareDnsRecords;
 }

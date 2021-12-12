@@ -60,6 +60,9 @@ try {
   // You can get informations about the current page, zones per page, zones count, ...
   console.log(resultInfo); 
 
+  // You can check if there are zones found.
+  if (resultInfo.count <= 0) return;
+
   // Get the first zone.
   const zone = zones[0];
 
@@ -105,5 +108,69 @@ const purged = await zone.purgeAllFiles();
 console.log(purged); // returns true if okay.
 ```
 
+### List DNS records of this zone
+
+Adapated from <https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records>. You can find the list of parameters here available.
+
+Here is an example if I want to get all the DNS records that are proxied by Cloudflare.
+
+```typescript
+const { records, resultInfo } = await zone.listDnsRecords({
+  match: "all",
+  proxied: true
+});
+
+// You can get informations about the current page, records per page, records count, ...
+console.log(resultInfo);
+
+// You can check if there are records found.
+if (resultInfo.count <= 0) return;
+
+// Get the first DNS record.
+const record = records[0];
+
+// You can extract the DNS record's informations with the `rawData` property.
+const recordName = record.rawData.name; // string
+const recordContent = record.rawData.content; // string
+const recordType = record.rawData.type // CloudflareDnsRecordsString
+console.log(recordName, recordContent, recordType);
+```
+
+### Get a record from its ID
+
+If you know the `identifier`, you can simply get the record like this.
+
+```typescript
+const recordId = "xxxxxxxxxxxxxxxx";
+const record = await zone.getRecordFromId(recordId);
+
+// Now you have your record.
+console.log(record.rawData.name);
+```
+
 ### Create a DNS record
 
+Create a new DNS record inside this zone.
+Adapted from <https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record>. You can find the list of parameters here.
+
+`type`, `content` and `name` properties are required.
+By the way, for DNS records of type `MX`, `SRV` and `URI`, you **must** include the `priority` property.
+
+```typescript
+const createdRecord = await zone.createDnsRecord({
+  type: "A",
+  content: "127.0.0.1",
+
+  // "local" is "local.example.com", for example.
+  // You can write "example.com" is you want to use the root domain. 
+  name: "local"
+});
+
+console.log(createdRecord); // Returns the DNS record object.
+```
+
+## Record Methods
+
+You can use now your `record` variable to perform some methods.
+
+### Update the record.
