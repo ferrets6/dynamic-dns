@@ -1,5 +1,8 @@
 import type { Got } from "got";
 import type {
+  CloudflareResponse
+} from "./types/CloudflareApi";
+import type {
   CloudflareZone,
 
   // this.createDnsRecord
@@ -11,9 +14,8 @@ import type {
   CloudflareZoneListDnsRecordsResponse
 } from "./types/CloudflareZone";
 
-import { HTTPError } from "got";
 import CloudflareApiDnsRecord from "./DnsRecord";
-import { CloudflareResponse } from "./types/CloudflareApi";
+import handleError from "./utils/errorHandler";
 
 class CloudflareApiZone {
   public rawData: CloudflareZone;
@@ -60,13 +62,7 @@ class CloudflareApiZone {
       return body.result.map(record => new CloudflareApiDnsRecord(this.api, record));
     }
     catch (error) {
-      if (error instanceof HTTPError) {
-        const body: CloudflareZoneListDnsRecordsResponse = JSON.parse(error.response.body as string);
-        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
-
-        throw new Error(`[CloudflareApi] Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
-      }
-
+      handleError(error);
       throw error;
     }
   }
@@ -108,13 +104,7 @@ class CloudflareApiZone {
       return new CloudflareApiDnsRecord(this.api, body.result);
     }
     catch (error) {
-      if (error instanceof HTTPError) {
-        const body: CloudflareZoneCreateDnsRecordResponse = JSON.parse(error.response.body as string);
-        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
-
-        throw new Error(`[CloudflareApi] Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
-      }
-
+      handleError(error);
       throw error;
     }
   }
@@ -130,13 +120,7 @@ class CloudflareApiZone {
       return body.success;
     }
     catch (error) {
-      if (error instanceof HTTPError) {
-        const body: CloudflareResponse = JSON.parse(error.response.body as string);
-        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
-
-        throw new Error(`[CloudflareApi] Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
-      }
-
+      handleError(error);
       throw error;
     }
   }

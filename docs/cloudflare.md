@@ -32,7 +32,9 @@ const cloudflare = new CloudflareApi({
 });
 ```
 
-## List your zones
+## Zones
+
+### List your zones
 
 Adapted from <https://api.cloudflare.com/#zone-list-zones>.
 All the optional parameters are available.
@@ -72,7 +74,9 @@ catch (error) {
 }
 ```
 
-## Get a zone from its ID
+### Get a zone from its ID
+
+If you know the `zone_identifier`, you can simply get the zone like this.
 
 ```typescript
 try {
@@ -90,16 +94,16 @@ catch (error) {
 }
 ```
 
+## Zone Methods
 
-## Purge all files from a zone
+You can use now your `zone` variable to perform some methods.
+
+### Purge all files from a zone
 
 ```typescript
-  try {
-    const purged = await zone.purgeAllFiles();
-    console.log(purged); // returns true if okay.
-  }
-  catch (error) {
-    // Error handling.
-    console.error(error);
-  }
+const purged = await zone.purgeAllFiles();
+console.log(purged); // returns true if okay.
 ```
+
+### Create a DNS record
+

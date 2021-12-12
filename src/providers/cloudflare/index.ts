@@ -6,7 +6,8 @@ import type {
   CloudflareListZonesResponse
 } from "./types/CloudflareApi";
 
-import got, { HTTPError } from "got";
+import got from "got";
+import handleError from "./utils/errorHandler";
 import CloudflareApiZone from "./Zone";
 export class CloudflareApi {
   private api: typeof got;
@@ -90,13 +91,7 @@ export class CloudflareApi {
       };
     }
     catch (error) {
-      if (error instanceof HTTPError) {
-        const body: CloudflareListZonesResponse = JSON.parse(error.response.body as string);
-        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
-
-        throw new Error(`Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
-      }
-
+      handleError(error);
       throw error;
     }
   }
@@ -108,13 +103,7 @@ export class CloudflareApi {
       return new CloudflareApiZone(this.api, body.result);
     }
     catch (error) {
-      if (error instanceof HTTPError) {
-        const body: CloudflareGetZoneFromIdResponse = JSON.parse(error.response.body as string);
-        const errorsMessage = body.errors.map(({ code, message }) => `[${code}] ${message}`).join("\n");
-
-        throw new Error(`Error with status code: ${error.response.statusCode}.\n${errorsMessage}`);
-      }
-
+      handleError(error);
       throw error;
     }
   }
