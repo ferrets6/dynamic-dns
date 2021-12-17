@@ -30,7 +30,8 @@ class CloudflareApiDnsRecord {
     proxied
   }: CloudflareDnsRecordUpdateProps) {
     try {
-      const body = await this.api.patch(`zones/${this.rawData.zone_id}/dns_records/${this.rawData.id}`, {
+      const url = `zones/${this.rawData.zone_id}/dns_records/${this.rawData.id}`;
+      const body = await this.api.patch(url, {
         json: {
           type,
           name,
@@ -51,7 +52,8 @@ class CloudflareApiDnsRecord {
 
   public async delete () {
     try {
-      const body = await this.api.delete(`zones/${this.rawData.zone_id}/dns_records/${this.rawData.id}`)
+      const url = `zones/${this.rawData.zone_id}/dns_records/${this.rawData.id}`;
+      const body = await this.api.delete(url)
         .json<CloudflareDnsRecordDeleteResponse>();
 
       // A little check.

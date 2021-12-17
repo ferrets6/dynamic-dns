@@ -29,7 +29,10 @@ export interface CloudflareDnsRecord {
   proxiable: boolean;
   proxied: boolean;
 
-  /** 3600 is default value. 1 is for "Automatic". */
+  /**
+   * 3600 is default value.
+   * 1 is for "Automatic".
+   */
   ttl: number;
 
   content: string;

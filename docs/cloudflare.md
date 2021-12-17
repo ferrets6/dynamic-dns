@@ -187,6 +187,8 @@ const updatedRecord = await newRecord.update({
 });
 ```
 
+By the way, `updatedRecord` is a new `CloudflareDnsRecord` class object. So `newRecord` will keep the old data before updating the record.
+
 ### Delete the record
 
 Delete the selected DNS record from the zone.

@@ -16,7 +16,7 @@ To verify that, just go into your domain's dashboard and check the `Namesevers` 
 
 Mine is pointed to Namecheap `BasicDNS` as you can see, here...
 
-![My nameservers configuration](./assets/namecheap-1.png)
+![NS Configuration](./assets/namecheap-1.png)
 
 After that, you'll be able to go into the `Advanced DNS` tab.
 Go to the bottom until you see the `Dynamic DNS` option.
