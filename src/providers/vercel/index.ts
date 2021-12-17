@@ -1,4 +1,4 @@
-import type { VercelInstanceOptions, VercelListTeamsProps } from "./types/VercelApi";
+import type { VercelInstanceOptions, VercelListTeamsProps, VercelListTeamsResponse } from "./types/VercelApi";
 
 import VercelApiRequests from "./Requests";
 import VercelTeamsApi from "./Team";
@@ -32,16 +32,14 @@ export class VercelApi extends VercelApiRequests {
         since,
         until
       }
-    }).json<{
-      teams: { [key: string]: unknown }[];
-    }>();
+    }).json<VercelListTeamsResponse>();
 
     return {
+      resultInfo: body.pagination,
       teams: body.teams.map(team => new VercelTeamsApi(
         this.options,
         team
       ))
     };
   }
-
 }

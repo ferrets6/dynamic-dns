@@ -1,17 +1,21 @@
-import type { VercelRequestsInstanceOptions } from "./types/VercelApi";
+import type {
+  TeamLimited,
+  VercelRequestsInstanceOptions
+} from "./types/VercelApi";
+
 import VercelApiRequests from "./Requests";
 
 class VercelTeamsApi extends VercelApiRequests {
-  public rawData: Record<string, unknown>;
+  public rawData: TeamLimited;
 
   constructor (
     options: VercelRequestsInstanceOptions,
-    rawData: Record<string, unknown>
+    rawData: TeamLimited
   ) {
     super(options);
     this.api = this.api.extend({
       searchParams: {
-        teamId: "1"
+        teamId: rawData.id
       }
     });
 

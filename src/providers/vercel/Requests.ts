@@ -24,7 +24,7 @@ class VercelApiRequests {
    * Retrieves a list of domains registered for the authenticating user.
    * By default it returns the last 20 domains if no limit is provided.
    */
-  public async listDomain ({
+  public async listDomains ({
     limit,
     since,
     until
