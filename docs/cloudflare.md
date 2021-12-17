@@ -202,8 +202,3 @@ catch (error) {
   console.error("Failed", error);
 }
 ```
-
-
-## Complete examples
-
-With this yo uca
