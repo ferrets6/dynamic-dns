@@ -1,6 +1,6 @@
 import type {
-  CloudflareDnsRecordsString,
-  CloudflareDnsRecords
+  CloudflareDnsRecordTypes,
+  CloudflareDnsRecord
 } from "./CloudflareDnsRecord";
 
 import type {
@@ -89,7 +89,7 @@ export type CloudflareZoneListDnsRecordsProps = {
   /** DNS record content. */
   content?: string;
   /** DNS record type. */
-  type?: CloudflareDnsRecordsString;
+  type?: CloudflareDnsRecordTypes;
   /** DNS record proxied status. */
   proxied?: boolean;
 
@@ -103,7 +103,7 @@ export type CloudflareZoneListDnsRecordsProps = {
 
 /** Response of a zone's DNS records. */
 export interface CloudflareZoneListDnsRecordsResponse extends CloudflareResponse {
-  result: CloudflareDnsRecords[];
+  result: CloudflareDnsRecord[];
   result_info: CloudflareResponseResultInfo;
 }
 
@@ -114,7 +114,7 @@ export interface CloudflareZoneListDnsRecordsResponse extends CloudflareResponse
  */
 export type CloudflareZoneCreateDnsRecordProps = {
   /** DNS record type. */
-  type: CloudflareDnsRecordsString;
+  type: CloudflareDnsRecordTypes;
   /** DNS record name. */
   name: string;
   /** DNS record content. */
@@ -137,9 +137,9 @@ export type CloudflareZoneCreateDnsRecordProps = {
 }
 
 export interface CloudflareZoneCreateDnsRecordResponse extends CloudflareResponse {
-  result: CloudflareDnsRecords;
+  result: CloudflareDnsRecord;
 }
 
 export interface CloudflareZoneGetRecordFromIdResponse extends CloudflareResponse {
-  result: CloudflareDnsRecords;
+  result: CloudflareDnsRecord;
 }
