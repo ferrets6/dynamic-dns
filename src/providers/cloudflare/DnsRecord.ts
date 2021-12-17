@@ -22,7 +22,7 @@ class CloudflareApiDnsRecord {
     this.rawData = rawData;
   }
 
-  public async update({
+  public async update ({
     type,
     name,
     content,

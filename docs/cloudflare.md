@@ -132,7 +132,7 @@ const record = records[0];
 // You can extract the DNS record's informations with the `rawData` property.
 const recordName = record.rawData.name; // string
 const recordContent = record.rawData.content; // string
-const recordType = record.rawData.type // CloudflareDnsRecordsString
+const recordType = record.rawData.type // string from CloudflareDnsRecordTypes
 console.log(recordName, recordContent, recordType);
 ```
 
@@ -157,6 +157,7 @@ Adapted from <https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-reco
 By the way, for DNS records of type `MX`, `SRV` and `URI`, you **must** include the `priority` property.
 
 ```typescript
+// Returns the DNS record object is successful.
 const createdRecord = await zone.createDnsRecord({
   type: "A",
   content: "127.0.0.1",
@@ -166,7 +167,7 @@ const createdRecord = await zone.createDnsRecord({
   name: "local"
 });
 
-console.log(createdRecord); // Returns the DNS record object.
+console.log(createdRecord.rawData.id);
 ```
 
 ## Record Methods
@@ -174,3 +175,35 @@ console.log(createdRecord); // Returns the DNS record object.
 You can use now your `record` variable to perform some methods.
 
 ### Update the record.
+
+Adapted from <https://api.cloudflare.com/#dns-records-for-a-zone-patch-dns-record> You can find the list of parameters here.
+
+Every parameters are optionnal.
+
+```typescript
+const updatedRecord = await newRecord.update({
+  name: "newExample",
+  content: "127.0.0.2"
+});
+```
+
+### Delete the record
+
+Delete the selected DNS record from the zone.
+
+Always returns `true`. If there's an error, it will throw the error instead of returning `false`.
+
+```typescript
+try {
+  const isDeleted = await record.delete();
+  console.log(isDeleted); // true 
+}
+catch (error) {
+  console.error("Failed", error);
+}
+```
+
+
+## Complete examples
+
+With this yo uca
