@@ -1,4 +1,4 @@
-# dynamic-dns
+# dynamic-dns [![wakatime](https://wakatime.com/badge/user/0839e595-e07a-435c-8d59-ed95f2a3d6dd/project/9c25322f-0486-4f84-bb88-086c57a8e56b.svg?style=flat-square)](https://wakatime.com/@Vexcited/projects/ngorfgqkor)
 
 > API and CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and more.
 
@@ -37,6 +37,7 @@ npm install --save dynamic-dns
 `dynamic-dns` has built-in types so you can also use it with TypeScript.
 
 You can see the API documentation for each providers.
-- [Cloudflare](./docs/cloudflare.md)
 - [Namecheap](./docs/namecheap.md)
+- [Cloudflare](./docs/cloudflare.md)
+- [Netlify](./docs/netlify.md)
 - [Vercel](./docs/vercel.md)
