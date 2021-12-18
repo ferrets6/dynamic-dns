@@ -84,12 +84,11 @@ if (resultInfo.count > 0) {
 }
 ```
 
-
 ## Domains
 
 Here is some methods to get a domain.
 
-### List domains
+### List Domains
 
 Adapted from <https://vercel.com/docs/rest-api#endpoints/domains/list-all-the-domains>. You'll find the documentation for the optional parameters there.
 
@@ -246,6 +245,34 @@ try {
 }
 catch (e) {
   // DNS record didn't deleted.
+  console.error(e);
+}
+```
+
+## Example Usage
+
+```typescript
+try {
+  // const { teams } = await api.listTeams({
+  //   limit: 2
+  // });
+
+  // const myTeam = teams[0];
+  // console.log("Team's Name:", myTeam.rawData.name);
+
+  const myDomain = await api.getDomainFromName("example.com");
+  console.log("Domain ID:", myDomain.rawData.id);
+
+  const { records, resultInfo } = await myDomain.listDnsRecords({
+    limit: 20
+  });
+  console.info("Found", resultInfo.count, "record(s) !");
+
+  records.map(record => {
+    console.log("Slug:", record.rawData.slug, "; ID:", record.rawData.id);
+  });
+}
+catch(e) {
   console.error(e);
 }
 ```
