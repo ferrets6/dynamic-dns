@@ -22,9 +22,9 @@ class VercelDnsRecordsApi {
     this.domainRawData = domainRawData;
   }
 
+  /** Update this DNS record. */
   public async update ({
     name = this.rawData.name,
-    type = this.rawData.type,
     value = this.rawData.value,
     ttl = this.rawData.ttl
   }: VercelDnsRecordUpdateProps) {
@@ -33,13 +33,12 @@ class VercelDnsRecordsApi {
       const body = await this.api.patch(url, {
         json: {
           name,
-          type,
           value,
           ttl
         }
       }).json<VercelDnsRecord>();
 
-      return body;
+      return new VercelDnsRecordsApi(this.api, body, this.domainRawData);
     }
     catch (error) {
       handleError(error);

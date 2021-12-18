@@ -145,12 +145,31 @@ records.map(record => {
 });
 ```
 
+By the way, you can get a record from its name with this method like this
+```typescript
+const { records } = await myDomain.listDnsRecords({
+  limit: 20
+});
+const matchingRecords = records.filter(record => record.rawData.name === "local");
+
+// Check if the record exists.
+if (matchingRecords.length > 0) {
+  const myRecord = matchingRecords[0]; // Here is your domain.
+  console.info("DNS Record ID:", myRecord.rawData.id);
+}
+else {
+  console.error("DNS Record not found.");
+}
+```
+
 ### Create DNS record
 
 Create a new DNS record in this domain.
 Adapted from <https://vercel.com/docs/rest-api#endpoints/dns/create-a-dns-record>.
 
 `ttl` parameter is optional. Its minimum and default value is 60 and its maximum value is 2147483647.
+
+`MX` and `SRV` record types aren't supported actually because they implies some parameters that aren't typed and checked in this library (`priority` for both and `srv` object for SRV type).
 
 ```typescript
 try {
@@ -199,10 +218,14 @@ Now that you have a DNS record (from `listDnsRecords`), you can perform methods 
 You can update the current DNS record.
 Every parameters are optional.
 
+**By the way, you can't change the type of a DNS record.**
+
 ```typescript
 // This will update ONLY the value of the DNS record.
 const updatedRecord = await myRecord.update({
-  value: "127.0.0.2"
+  value: "127.0.0.2",
+  // name: string,
+  // ttl: number (with 60 > number > 2147483647)
 });
 
 // Note that `myRecord` and `updatedRecord` aren't the same, now.
