@@ -13,6 +13,13 @@ export interface VercelErrorResponse {
   }
 }
 
+/** Props that exist on every "list" | "browse" methods. */
+export interface VercelApiBrowseProps {
+  since?: number;
+  until?: number;
+  limit?: number;
+}
+
 /**
  * This object contains information related to the pagination of the current request,
  * including the necessary parameters to get the next or previous page of data.
@@ -44,17 +51,6 @@ export interface VercelTeam {
   /** UNIX timestamp (in milliseconds) when the Team was created. */
   createdAt: number;
 }
-
-/**
- * Parameters of listTeams.
- * Documentation: https://vercel.com/docs/rest-api#endpoints/teams/list-all-teams.
- */
-export interface VercelListTeamsProps {
-  until?: number;
-  since?: number;
-  limit?: number;
-}
-
 /**
  * Response of listTeams.
  * Documentation: https://vercel.com/docs/rest-api#endpoints/teams/list-all-teams.

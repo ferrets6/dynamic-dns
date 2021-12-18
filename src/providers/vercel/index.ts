@@ -1,6 +1,7 @@
 import type {
   VercelInstanceOptions,
-  VercelListTeamsProps,
+  VercelApiBrowseProps,
+
   VercelListTeamsResponse
 } from "./types/VercelApi";
 
@@ -30,7 +31,7 @@ export class VercelApi extends VercelApiRequests {
     limit,
     since,
     until
-  }: VercelListTeamsProps) {
+  }: VercelApiBrowseProps) {
     try {
       const body = await this.api.get("v2/teams", {
         searchParams: {

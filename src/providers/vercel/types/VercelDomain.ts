@@ -1,3 +1,6 @@
+import type { VercelResponsePagination } from "./VercelApi";
+import type { VercelDnsRecord, VercelDnsRecordTypes } from "./VercelDnsRecord";
+
 export interface VercelDomain {
   suffix: boolean
   /** If the domain has the ownership verified. */
@@ -37,4 +40,24 @@ export interface VercelDomain {
   transferredAt?: number | null
   /** If transferred into Vercel, timestamp in milliseconds when the domain transfer was initiated. */
   transferStartedAt?: number
+}
+
+/**
+ * Response of listDnsRecords.
+ * Documentation: https://vercel.com/docs/rest-api#endpoints/dns/list-existing-dns-records.
+ */
+export interface VercelDomainListDnsRecordsResponse {
+  records: VercelDnsRecord[];
+  pagination: VercelResponsePagination;
+}
+
+/**
+ * Parameters of createDnsRecord.
+ * Documentation: https://vercel.com/docs/rest-api#endpoints/dns/create-a-dns-record.
+ */
+export interface VercelDomainCreateDnsRecordProps {
+  type: VercelDnsRecordTypes;
+  name: string;
+  value: string;
+  ttl?: number;
 }

@@ -1,9 +1,10 @@
-import type { VercelRequestsInstanceOptions } from "./types/VercelApi";
+import type {
+  VercelRequestsInstanceOptions,
+  VercelApiBrowseProps
+} from "./types/VercelApi";
 
 import type {
-  VercelRequestsDomainsProps,
   VercelRequestsDomainsResponse,
-
   VercelRequestsGetDomainFromNameResponse
 } from "./types/VercelRequests";
 
@@ -33,7 +34,7 @@ class VercelApiRequests {
     limit,
     since,
     until
-  }: VercelRequestsDomainsProps) {
+  }: VercelApiBrowseProps) {
     try {
       const body = await this.api.get("v5/domains", {
         searchParams: {
