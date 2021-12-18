@@ -42,6 +42,8 @@ To do that, you can list all the teams found on the current authenticated user.
 
 This method is adapted from <https://vercel.com/docs/rest-api#endpoints/teams/list-all-teams>. You'll find the documentation for the optional parameters there.
 
+### Example
+
 ```typescript
 try {
   const { resultInfo, teams } = await api.listTeams({
@@ -75,6 +77,11 @@ const { resultInfo, domains } = await myTeam.listDomains({
 });
 
 console.info(`The first team have ${resultInfo.count} domain(s).`);
+if (resultInfo.count > 0) {
+  domains.map(domain => {
+    console.log(domain.rawData.id);
+  });
+}
 ```
 
 ## List domains
@@ -89,4 +96,17 @@ const { resultInfo, domains } = await api.listDomains({
   // since: number,
   // until: number
 })
+```
+
+## Get domain from its name
+
+You can get a single domain with its name.
+Adapated from <https://vercel.com/docs/rest-api#endpoints/domains/get-information-for-a-single-domain>.
+
+```typescript
+const myDomainName = "example.com";
+const myDomain = await api.getDomainFromName(myDomainName);
+
+const myDomainId = myDomain.rawData.id;
+console.log(myDomainName, myDomainId);
 ```

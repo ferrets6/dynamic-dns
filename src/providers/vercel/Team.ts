@@ -1,16 +1,16 @@
 import type {
-  TeamLimited,
+  VercelTeam,
   VercelRequestsInstanceOptions
 } from "./types/VercelApi";
 
 import VercelApiRequests from "./Requests";
 
 class VercelTeamsApi extends VercelApiRequests {
-  public rawData: TeamLimited;
+  public rawData: VercelTeam;
 
   constructor (
     options: VercelRequestsInstanceOptions,
-    rawData: TeamLimited
+    rawData: VercelTeam
   ) {
     super(options);
     this.api = this.api.extend({

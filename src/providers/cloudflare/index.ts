@@ -40,7 +40,7 @@ export class CloudflareApi {
     }
     // If we can't authenticate, send error.
     else {
-      throw new Error("{token} or {authEmail, authKey} not passed ! Can't login.");
+      throw new Error("[CloudflareApi] {token} or {authEmail, authKey} missing !");
     }
   }
 

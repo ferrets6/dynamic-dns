@@ -69,7 +69,7 @@ catch (e) {
   console.error(e);
   // The error will look like this:
 
-  // Error: Namecheap DynamicDNS API Errors:
+  // Error: [NamecheapAPI] Errors:
   // - No Records updated. A record not Found;
 }
 ```

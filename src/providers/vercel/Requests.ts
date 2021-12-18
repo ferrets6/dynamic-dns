@@ -2,16 +2,21 @@ import type { VercelRequestsInstanceOptions } from "./types/VercelApi";
 
 import type {
   VercelRequestsDomainsProps,
-  VercelRequestsDomainsResponse
+  VercelRequestsDomainsResponse,
+
+  VercelRequestsGetDomainFromNameResponse
 } from "./types/VercelRequests";
 
 import got from "got";
+import handleError from "./utils/errorHandler";
+
+import VercelDomainsApi from "./Domain";
 
 class VercelApiRequests {
   protected api: typeof got;
 
   constructor (options: VercelRequestsInstanceOptions) {
-    if (!options.token) throw new Error("VercelApi: `token` property is missing !");
+    if (!options.token) throw new Error("[VercelApi] `token` property is missing !");
     this.api = got.extend({
       prefixUrl: "https://api.vercel.com",
       headers: {
@@ -29,14 +34,38 @@ class VercelApiRequests {
     since,
     until
   }: VercelRequestsDomainsProps) {
-    const body = await this.api.get("v5/domains", {
-      searchParams: {
-        limit,
-        since,
-        until
-      }
-    }).json<VercelRequestsDomainsResponse>();
-    return body;
+    try {
+      const body = await this.api.get("v5/domains", {
+        searchParams: {
+          limit,
+          since,
+          until
+        }
+      }).json<VercelRequestsDomainsResponse>();
+
+      return {
+        resultInfo: body.pagination,
+        domains: body.domains.map(domain => new VercelDomainsApi(this.api, domain))
+      };
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+
+  /** Get information for a single domain in an account or team. */
+  public async getDomainFromName (domainName: string) {
+    try {
+      const body = await this.api.get(`v5/domains/${domainName}`)
+        .json<VercelRequestsGetDomainFromNameResponse>();
+
+      return new VercelDomainsApi(this.api, body.domain);
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
   }
 }
 

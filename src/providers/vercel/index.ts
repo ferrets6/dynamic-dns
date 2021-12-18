@@ -1,5 +1,10 @@
-import type { VercelInstanceOptions, VercelListTeamsProps, VercelListTeamsResponse } from "./types/VercelApi";
+import type {
+  VercelInstanceOptions,
+  VercelListTeamsProps,
+  VercelListTeamsResponse
+} from "./types/VercelApi";
 
+import handleError from "./utils/errorHandler";
 import VercelApiRequests from "./Requests";
 import VercelTeamsApi from "./Team";
 
@@ -26,20 +31,26 @@ export class VercelApi extends VercelApiRequests {
     since,
     until
   }: VercelListTeamsProps) {
-    const body = await this.api.get("v2/teams", {
-      searchParams: {
-        limit,
-        since,
-        until
-      }
-    }).json<VercelListTeamsResponse>();
+    try {
+      const body = await this.api.get("v2/teams", {
+        searchParams: {
+          limit,
+          since,
+          until
+        }
+      }).json<VercelListTeamsResponse>();
 
-    return {
-      resultInfo: body.pagination,
-      teams: body.teams.map(team => new VercelTeamsApi(
-        this.options,
-        team
-      ))
-    };
+      return {
+        resultInfo: body.pagination,
+        teams: body.teams.map(team => new VercelTeamsApi(
+          this.options,
+          team
+        ))
+      };
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
   }
 }

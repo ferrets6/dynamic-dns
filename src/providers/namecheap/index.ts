@@ -15,7 +15,7 @@ export class NamecheapApi {
    * @param {NamecheapInstanceOptions} options - Options for the Namecheap API
    */
   constructor (options: NamecheapInstanceOptions) {
-    if (!options.dynamicDnsPassword) throw Error("The property `dynamicDnsPassword` is missing on the `NamecheapApi` constructor.");
+    if (!options.dynamicDnsPassword) throw Error("[NamecheapApi] Property `dynamicDnsPassword` is missing.");
 
     this.api = got.extend({
       url: "https://dynamicdns.park-your-domain.com/update",
@@ -32,7 +32,7 @@ export class NamecheapApi {
   }
 
   public async updateDnsRecord({ domain, host, ip = null }: NamecheapUpdateDnsRecordProps) {
-    if (!domain || !host) throw Error("Properties `domain` or `host` are missing.");
+    if (!domain || !host) throw Error("[NamecheapApi] Properties `domain` or `host` are missing.");
 
     const body = await this.api.post({
       searchParams: {
@@ -64,7 +64,7 @@ export class NamecheapApi {
         return errorText;
       });
 
-      throw new Error(`Namecheap DynamicDNS API Errors:\n${errors.map(error => `- ${error}`).join("\n")}`);
+      throw new Error(`[NamecheapApi] Errors:\n${errors.map(error => `- ${error}`).join("\n")}`);
     }
   }
 }
