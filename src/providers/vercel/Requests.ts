@@ -8,7 +8,7 @@ import type {
 import got from "got";
 
 class VercelApiRequests {
-  public api: typeof got;
+  protected api: typeof got;
 
   constructor (options: VercelRequestsInstanceOptions) {
     if (!options.token) throw new Error("VercelApi: `token` property is missing !");

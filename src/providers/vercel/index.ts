@@ -13,13 +13,13 @@ export class VercelApi extends VercelApiRequests {
   constructor (options: VercelInstanceOptions) {
     super(options);
 
-    // Accessing when creating VercelTeamsApi classes.
+    // Used when instancing VercelTeamsApi class.
     this.options = options;
   }
 
   /**
    * Get a paginated list of all the Teams the authenticated User is a member of.
-   * https://vercel.com/docs/rest-api#endpoints/teams/get-a-team
+   * Documentation: https://vercel.com/docs/rest-api#endpoints/teams/list-all-teams.
    */
   public async listTeams ({
     limit,
