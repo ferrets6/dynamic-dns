@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "declaration": true,
-    "sourceMap": true,
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "target": "ES5",
+
     "rootDir": "src",
     "outDir": "dist",
+    
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "sourceMap": true,
+    "declaration": true,
+    "esModuleInterop": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

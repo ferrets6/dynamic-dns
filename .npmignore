@@ -1,11 +1,7 @@
-# Depedencies
-node_modules
-
 # Source
 src
 
-# Miscs
+# Miscellaneous
 .eslintignore
-.gitignore
 .eslintrc
 .vscode
