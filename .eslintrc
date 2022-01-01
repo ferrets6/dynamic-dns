@@ -10,6 +10,7 @@
     "brace-style": ["error", "stroustrup"],
     "comma-dangle": ["error", "never"],
     "no-trailing-spaces": "error",
+    "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "no-unused-vars": "error",
     "indent": ["error", 2],
