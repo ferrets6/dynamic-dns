@@ -2,7 +2,7 @@ import type { Element } from "xml-js";
 import type {
   NamecheapInstanceOptions,
   NamecheapUpdateDnsRecordProps
-} from "./types/NamecheapApi";
+} from "./types/NamecheapApi.js";
 
 import { xml2js } from "xml-js";
 import got from "got";

@@ -1,9 +1,9 @@
 import type {
   VercelTeam,
   VercelRequestsInstanceOptions
-} from "./types/VercelApi";
+} from "./types/VercelApi.js";
 
-import VercelApiRequests from "./Requests";
+import VercelApiRequests from "./Requests.js";
 
 class VercelTeamsApi extends VercelApiRequests {
   public rawData: VercelTeam;

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import inquirer from "inquirer";
-import * as commands from "./commands";
+import * as commands from "./commands/index.js";
 
 const availableProviders = [
   "Cloudflare",

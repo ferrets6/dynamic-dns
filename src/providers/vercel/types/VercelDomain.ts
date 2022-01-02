@@ -1,5 +1,5 @@
-import type { VercelResponsePagination } from "./VercelApi";
-import type { VercelDnsRecord, VercelDnsRecordTypes } from "./VercelDnsRecord";
+import type { VercelResponsePagination } from "./VercelApi.js";
+import type { VercelDnsRecord, VercelDnsRecordTypes } from "./VercelDnsRecord.js";
 
 export interface VercelDomain {
   suffix: boolean

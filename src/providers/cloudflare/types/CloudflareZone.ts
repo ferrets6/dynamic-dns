@@ -1,12 +1,12 @@
 import type {
   CloudflareDnsRecordTypes,
   CloudflareDnsRecord
-} from "./CloudflareDnsRecord";
+} from "./CloudflareDnsRecord.js";
 
 import type {
   CloudflareResponse,
   CloudflareResponseResultInfo
-} from "./CloudflareApi";
+} from "./CloudflareApi.js";
 
 export type CloudflareZoneStatus = "active"
 | "pending"

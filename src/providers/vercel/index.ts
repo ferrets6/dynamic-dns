@@ -3,11 +3,11 @@ import type {
   VercelApiBrowseProps,
 
   VercelListTeamsResponse
-} from "./types/VercelApi";
+} from "./types/VercelApi.js";
 
-import handleError from "./utils/errorHandler";
-import VercelApiRequests from "./Requests";
-import VercelTeamsApi from "./Team";
+import handleError from "./utils/errorHandler.js";
+import VercelApiRequests from "./Requests.js";
+import VercelTeamsApi from "./Team.js";
 
 export class VercelApi extends VercelApiRequests {
   private options: VercelInstanceOptions;

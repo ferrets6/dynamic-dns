@@ -1,4 +1,4 @@
-import type { CloudflareResponse } from "./CloudflareApi";
+import type { CloudflareResponse } from "./CloudflareApi.js";
 
 /** Every type of DNS records avalaible on Cloudflare. */
 export type CloudflareDnsRecordTypes = "A"

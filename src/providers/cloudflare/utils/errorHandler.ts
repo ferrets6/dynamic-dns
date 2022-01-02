@@ -1,4 +1,4 @@
-import type { CloudflareResponse } from "../types/CloudflareApi";
+import type { CloudflareResponse } from "../types/CloudflareApi.js";
 import { HTTPError } from "got";
 
 export default function errorHandler (error: unknown) {

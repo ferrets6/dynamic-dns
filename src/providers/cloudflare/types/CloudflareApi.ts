@@ -1,7 +1,7 @@
 import type {
   CloudflareZone,
   CloudflareZoneStatus
-} from "./CloudflareZone";
+} from "./CloudflareZone.js";
 
 export type CloudflareInstanceOptions = {
   // API Token

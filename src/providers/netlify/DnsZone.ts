@@ -1,5 +1,5 @@
 import type { Got } from "got";
-import type { NetlifyDnsZone } from "./types/NetlifyDnsZone";
+import type { NetlifyDnsZone } from "./types/NetlifyDnsZone.js";
 import type {
   NetlifyApiDnsZoneCreateDnsRecordProps,
   NetlifyApiDnsZoneCreateDnsRecordResponse,
@@ -7,10 +7,10 @@ import type {
   NetlifyApiDnsZoneGetDnsRecordsResponse,
 
   NetlifyApiDnsZoneGetDnsRecordFromIdResponse
-} from "./types/NetlifyDnsRecord";
+} from "./types/NetlifyDnsRecord.js";
 
-import NetlifyApiDnsRecord from "./DnsRecord";
-import handleError from "./utils/errorHandler";
+import NetlifyApiDnsRecord from "./DnsRecord.js";
+import handleError from "./utils/errorHandler.js";
 
 class NetlifyApiDnsZone {
   private api: Got;

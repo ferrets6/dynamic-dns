@@ -1,4 +1,4 @@
-import type { NetlifyDnsZone } from "./NetlifyDnsZone";
+import type { NetlifyDnsZone } from "./NetlifyDnsZone.js";
 
 export interface NetlifyInstanceOptions {
   token: string;

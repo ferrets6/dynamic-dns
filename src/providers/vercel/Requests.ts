@@ -1,17 +1,17 @@
 import type {
   VercelRequestsInstanceOptions,
   VercelApiBrowseProps
-} from "./types/VercelApi";
+} from "./types/VercelApi.js";
 
 import type {
   VercelRequestsDomainsResponse,
   VercelRequestsGetDomainFromNameResponse
-} from "./types/VercelRequests";
+} from "./types/VercelRequests.js";
 
 import got from "got";
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
-import VercelDomainsApi from "./Domain";
+import VercelDomainsApi from "./Domain.js";
 
 class VercelApiRequests {
   protected api: typeof got;

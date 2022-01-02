@@ -1,13 +1,13 @@
 import type { Got } from "got";
-import VercelDnsRecordsApi from "./DnsRecord";
-import type { VercelApiBrowseProps } from "./types/VercelApi";
+import VercelDnsRecordsApi from "./DnsRecord.js";
+import type { VercelApiBrowseProps } from "./types/VercelApi.js";
 import type {
   VercelDomain,
   VercelDomainCreateDnsRecordProps,
   VercelDomainListDnsRecordsResponse
-} from "./types/VercelDomain";
+} from "./types/VercelDomain.js";
 
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
 class VercelDomainsApi {
   private api: Got;

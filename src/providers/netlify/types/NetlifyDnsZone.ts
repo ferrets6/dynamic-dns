@@ -1,4 +1,4 @@
-import type { NetlifyDnsRecord } from "./NetlifyDnsRecord";
+import type { NetlifyDnsRecord } from "./NetlifyDnsRecord.js";
 
 export interface NetlifyDnsZone {
   id: string;

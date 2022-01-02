@@ -2,10 +2,10 @@ import type { Got } from "got";
 import type {
   VercelDnsRecord,
   VercelDnsRecordUpdateProps
-} from "./types/VercelDnsRecord";
-import type { VercelDomain } from "./types/VercelDomain";
+} from "./types/VercelDnsRecord.js";
+import type { VercelDomain } from "./types/VercelDomain.js";
 
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
 class VercelDnsRecordsApi {
   private api: Got;

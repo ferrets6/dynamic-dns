@@ -1,6 +1,6 @@
 import { HTTPError } from "got";
 
-import type { VercelErrorResponse } from "../types/VercelApi";
+import type { VercelErrorResponse } from "../types/VercelApi.js";
 
 export default function errorHandler (error: unknown) {
   if (error instanceof HTTPError) {

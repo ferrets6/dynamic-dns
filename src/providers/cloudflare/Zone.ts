@@ -1,7 +1,8 @@
 import type { Got } from "got";
 import type {
   CloudflareResponse
-} from "./types/CloudflareApi";
+} from "./types/CloudflareApi.js";
+
 import type {
   CloudflareZone,
 
@@ -14,10 +15,10 @@ import type {
   // this.listDnsRecords
   CloudflareZoneListDnsRecordsProps,
   CloudflareZoneListDnsRecordsResponse
-} from "./types/CloudflareZone";
+} from "./types/CloudflareZone.js";
 
-import CloudflareApiDnsRecord from "./DnsRecord";
-import handleError from "./utils/errorHandler";
+import CloudflareApiDnsRecord from "./DnsRecord.js";
+import handleError from "./utils/errorHandler.js";
 
 class CloudflareApiZone {
   public rawData: CloudflareZone;

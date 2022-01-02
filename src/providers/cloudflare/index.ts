@@ -4,11 +4,11 @@ import type {
 
   CloudflareListZonesProps,
   CloudflareListZonesResponse
-} from "./types/CloudflareApi";
+} from "./types/CloudflareApi.js";
 
 import got from "got";
-import handleError from "./utils/errorHandler";
-import CloudflareApiZone from "./Zone";
+import handleError from "./utils/errorHandler.js";
+import CloudflareApiZone from "./Zone.js";
 export class CloudflareApi {
   private api: typeof got;
 

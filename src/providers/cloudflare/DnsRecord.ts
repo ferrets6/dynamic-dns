@@ -6,9 +6,9 @@ import type {
   CloudflareDnsRecordUpdateResponse,
 
   CloudflareDnsRecordDeleteResponse
-} from "./types/CloudflareDnsRecord";
+} from "./types/CloudflareDnsRecord.js";
 
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
 class CloudflareApiDnsRecord {
   public rawData: CloudflareDnsRecord;

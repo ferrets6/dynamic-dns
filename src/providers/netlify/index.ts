@@ -7,12 +7,12 @@ import type {
   NetlifyApiGetDnsZonesFromSiteIdResponse,
 
   NetlifyInstanceOptions
-} from "./types/NetlifyApi";
+} from "./types/NetlifyApi.js";
 
 import got from "got";
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
-import NetlifyApiDnsZone from "./DnsZone";
+import NetlifyApiDnsZone from "./DnsZone.js";
 
 export class NetlifyApi {
   private api: typeof got;

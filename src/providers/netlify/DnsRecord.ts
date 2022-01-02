@@ -1,7 +1,7 @@
 import type { Got } from "got";
-import type { NetlifyDnsRecord } from "./types/NetlifyDnsRecord";
+import type { NetlifyDnsRecord } from "./types/NetlifyDnsRecord.js";
 
-import handleError from "./utils/errorHandler";
+import handleError from "./utils/errorHandler.js";
 
 class NetlifyApiDnsRecord {
   private api: Got;

@@ -1,4 +1,4 @@
-import type { NetlifyErrorResponse } from "../types/NetlifyApi";
+import type { NetlifyErrorResponse } from "../types/NetlifyApi.js";
 import { HTTPError } from "got";
 
 export default function errorHandler (error: unknown) {

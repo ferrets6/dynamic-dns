@@ -1,5 +1,5 @@
-import type { VercelResponsePagination } from "./VercelApi";
-import type { VercelDomain } from "./VercelDomain";
+import type { VercelResponsePagination } from "./VercelApi.js";
+import type { VercelDomain } from "./VercelDomain.js";
 /**
  * Response of listDomains.
  * Documentation: https://vercel.com/docs/rest-api#endpoints/domains/list-all-the-domains.
