@@ -18,6 +18,8 @@ Commands:
     - [--ip X.X.X.X] => Optional: DNS record IP. Defaults to your public IPv4.
     - [--dns-type A|AAAA] => Optional: DNS record type. Defaults to A (IPv4).
   * listZones => Get a list of zones with their identifier.
+    - [--page 1] => Optional: Page to fetch. Defaults to 1.
+    - [--per-page 20] => Optional: Zones per page. Defaults to 20.
   * listRecords [ZONE_ID] => Get a list of DNS records in a specific zone.
 `;
 
@@ -77,11 +79,51 @@ export default async function handleCommand (args: string[]) {
       );
     }
 
+    // TODO
     console.log(zoneId, dnsRecordId, api, commandArguments, dnsType, ip);
     break;
   }
-  case "find": {
-    return console.log(commandArguments);
+  /** dynamic-dns cloudflare listZones [--page 1] [--per-page 20] */
+  case "listZones": {
+    const options = parseOptions(commandArguments);
+    const page = options.page as number || 1;
+    const perPage = options.perPage as number || 20;
+
+    const { resultInfo, zones } = await api.listZones({
+      per_page: perPage,
+      page
+    });
+
+    const header = `Listing of ${resultInfo.count + perPage * (page - 1)}/${resultInfo.total_count} zones\n`
+      + `Page ${resultInfo.page}/${resultInfo.total_pages} (${perPage} per page)`;
+
+    const message = header + "\n\n"
+      + zones.map(({ rawData }) => `* ${rawData.name} (${rawData.id})`)
+        .join("\n");
+
+    return console.log(message);
+  }
+  /** dynamic-dns cloudflare listRecords [ZONE_ID] [--page 1] [--per-page 20] */
+  case "listRecords": {
+    const [zoneId] = commandArguments;
+    const options = parseOptions(commandArguments.slice(1));
+    const page = options.page as number || 1;
+    const perPage = options.perPage as number || 20;
+
+    const zone = await api.getZoneFromId(zoneId);
+    const { resultInfo, records } = await zone.listDnsRecords({
+      per_page: perPage,
+      page
+    });
+
+    const header = `Listing of ${resultInfo.count + perPage * (page - 1)}/${resultInfo.total_count} records of zone ${zone.rawData.name}\n`
+      + `Page ${resultInfo.page}/${resultInfo.total_pages} (${perPage} per page)`;
+
+    const message = header + "\n\n"
+      + records.map(({ rawData }) => `* ${rawData.name} (${rawData.id})`)
+        .join("\n");
+
+    return console.log(message);
   }
   case "help":
   default:
