@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 import * as commands from "./commands/index.js";
 
+// Define the list of available providers.
 const availableProviders = [
   "Cloudflare",
   "Netlify",
   "Namecheap",
   "Vercel"
-];
+] as const;
+
+
+// Types the list of available providers.
+type ProvidersList = Lowercase<typeof availableProviders[number]>;
 
 const helpMessage = `
 Help: dynamic-dns - CLI
@@ -25,26 +30,20 @@ GitHub: https://github.com/Vexcited/dynamic-dns
 
   // Check given provider.
   const provider = args[0].toLowerCase();
-  if (!availableProviders.map(providerName => providerName.toLowerCase()).includes(provider))
-    return console.error(`"${provider}" is a currently not supported dynamic-dns DNS provider.`);
+  if (!availableProviders.map(
+    providerName => providerName.toLowerCase()
+  ).includes(provider))
+    return console.error(
+      `"${provider}" is a currently not supported dynamic-dns DNS provider.`
+    );
 
   // Execute provider command with arguments.
   const commandArgs = args.slice(1);
-  switch (provider) {
-  case "cloudflare":
-    await commands.cloudflare(commandArgs);
-    break;
-  case "namecheap":
-    await commands.namecheap(commandArgs);
-    break;
-  case "netlify":
-    await commands.netlify(commandArgs);
-    break;
-  case "vercel":
-    await commands.vercel(commandArgs);
-    break;
-  default:
-    console.info(
+  try {
+    return await commands[provider as ProvidersList](commandArgs);
+  }
+  catch (e) {
+    console.warn(
       `Currently, the "${provider}" provider isn't supported by the CLI.\n`
       + "However, you can still use its API, or better, contribute to the project to make it supported !"
     );

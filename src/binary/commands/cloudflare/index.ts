@@ -17,12 +17,14 @@ Commands:
   * update [ZONE_ID] [DNS_RECORD_ID] => Update a DNS record in a specific zone.
     - [--ip X.X.X.X] => Optional: DNS record IP. Defaults to your public IPv4.
     - [--dns-type A|AAAA] => Optional: DNS record type. Defaults to A (IPv4).
+    - [--cloudflare-proxied 0|1] => Optional: Proxy the record with Cloudflare. Defaults to 0 (false). Write 1 to make it true.
   * listZones => Get a list of zones with their identifier.
     - [--page 1] => Optional: Page to fetch. Defaults to 1.
     - [--per-page 20] => Optional: Zones per page. Defaults to 20.
   * listRecords [ZONE_ID] => Get a list of DNS records in a specific zone.
+    - [--page 1] => Optional: Page to fetch. Defaults to 1.
+    - [--per-page 20] => Optional: Records per page. Defaults to 20.
 `;
-
 
 export default async function handleCommand (args: string[]) {
   // Show help message.
@@ -79,9 +81,27 @@ export default async function handleCommand (args: string[]) {
       );
     }
 
-    // TODO
-    console.log(zoneId, dnsRecordId, api, commandArguments, dnsType, ip);
-    break;
+    /**
+     * `--cloudflare-proxied`: Defaults to 0 (false).
+     * Write 1 to pass it as true.
+     */
+    const cloudflareProxied = options.cloudflareProxied as number || 0;
+
+    const zone = await api.getZoneFromId(zoneId);
+    const record = await zone.getRecordFromId(dnsRecordId);
+
+    try {
+      const newRecord = await record.update({
+        type: dnsType,
+        content: ip as string,
+        proxied: !! cloudflareProxied
+      });
+
+      return console.info(`Update from ${record.rawData.content} to ${newRecord.rawData.content} succeed`);
+    }
+    catch (e) {
+      return console.error("Failed to update. Error thrown:\n", e);
+    }
   }
   /** dynamic-dns cloudflare listZones [--page 1] [--per-page 20] */
   case "listZones": {
@@ -89,13 +109,22 @@ export default async function handleCommand (args: string[]) {
     const page = options.page as number || 1;
     const perPage = options.perPage as number || 20;
 
-    const { resultInfo, zones } = await api.listZones({
+    const { resultInfo: {
+      page: resultPage,
+      count: resultCount,
+      per_page: resultPerPage,
+      total_count: resultTotalCount,
+      total_pages: resultTotalPages
+    }, zones } = await api.listZones({
       per_page: perPage,
       page
     });
 
-    const header = `Listing of ${resultInfo.count + perPage * (page - 1)}/${resultInfo.total_count} zones\n`
-      + `Page ${resultInfo.page}/${resultInfo.total_pages} (${perPage} per page)`;
+    // Fix the way they gave the count.
+    // Example with 5 per page: write "10/15" instead of "5/15".
+    const currentCountState = resultCount + resultPerPage * (resultPage - 1);
+    const header = `Listing of ${currentCountState}/${resultTotalCount} zones\n`
+      + `Page ${resultPage}/${resultTotalPages} (${perPage} per page)`;
 
     const message = header + "\n\n"
       + zones.map(({ rawData }) => `* ${rawData.name} (${rawData.id})`)
@@ -105,22 +134,45 @@ export default async function handleCommand (args: string[]) {
   }
   /** dynamic-dns cloudflare listRecords [ZONE_ID] [--page 1] [--per-page 20] */
   case "listRecords": {
-    const [zoneId] = commandArguments;
+    const [givenZoneId] = commandArguments;
     const options = parseOptions(commandArguments.slice(1));
+
+    // Parameters and default values.
     const page = options.page as number || 1;
     const perPage = options.perPage as number || 20;
 
-    const zone = await api.getZoneFromId(zoneId);
-    const { resultInfo, records } = await zone.listDnsRecords({
+    // Fetch the zone's data.
+    const zone = await api.getZoneFromId(givenZoneId);
+    const {
+      name: zoneName,
+      id: zoneId
+    } = zone.rawData;
+
+    // Fetch the records inside this zone.
+    const {
+      resultInfo: {
+        total_count: resultTotalCount,
+        total_pages: resultTotalPages,
+        per_page: resultPerPage,
+        count: resultCount,
+        page: resultPage
+      },
+      records
+    } = await zone.listDnsRecords({
       per_page: perPage,
       page
     });
 
-    const header = `Listing of ${resultInfo.count + perPage * (page - 1)}/${resultInfo.total_count} records of zone ${zone.rawData.name}\n`
-      + `Page ${resultInfo.page}/${resultInfo.total_pages} (${perPage} per page)`;
+    // Fix the way they gave the count.
+    // Example with 5 per page: write "10/15" instead of "5/15".
+    const currentCountState = resultCount + resultPerPage * (resultPage - 1);
+
+    const header =
+      `Listing of ${currentCountState}/${resultTotalCount} records of zone "${zoneName}" (${zoneId})\n`
+      + `Page ${resultPage}/${resultTotalPages} (${perPage} per page)`;
 
     const message = header + "\n\n"
-      + records.map(({ rawData }) => `* ${rawData.name} (${rawData.id})`)
+      + records.map(({ rawData: record }) => `* [${record.type}] ${record.name} (${record.id})\n  - Content: ${record.content}`)
         .join("\n");
 
     return console.log(message);
