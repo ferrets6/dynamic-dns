@@ -29,4 +29,5 @@ export interface VercelDnsRecordUpdateProps {
   name?: string;
   value?: string;
   ttl?: number;
+  type?: VercelDnsRecordTypes;
 }

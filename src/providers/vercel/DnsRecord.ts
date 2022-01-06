@@ -26,7 +26,8 @@ class VercelDnsRecordsApi {
   public async update ({
     name = this.rawData.name,
     value = this.rawData.value,
-    ttl = this.rawData.ttl
+    ttl = this.rawData.ttl,
+    type = this.rawData.type
   }: VercelDnsRecordUpdateProps) {
     try {
       const url = `v4/domains/records/${this.rawData.id}`;
@@ -34,7 +35,8 @@ class VercelDnsRecordsApi {
         json: {
           name,
           value,
-          ttl
+          ttl,
+          type
         }
       }).json<VercelDnsRecord>();
 

@@ -61,7 +61,6 @@ try {
   const myTeamId = myTeam.rawData.id;
   const myTeamSlug = myTeam.rawData.slug;
   console.info(`The first team returned is ${myTeamSlug} (${myTeamId}).`);
-
 }
 catch (error) {
   // Error handling.
@@ -161,6 +160,30 @@ else {
 }
 ```
 
+### Update DNS record from ID
+
+Update a DNS record directly from its ID.
+This method was made to prevent listing every records to update only one record.
+
+```ts
+const recordId = "rec_xxxxxxxxxxxx";
+const newRecord = await myDomain.updateRecordFromId(recordId, {
+  // Options are the same as `createDnsRecord`, see below.
+});
+
+// `newRecord` is the new content of the record.
+``` 
+
+### Delete DNS record from ID
+Delete a DNS record directly from its ID.
+This method was made to prevent listing every records to delete only one record.
+```ts
+const recordId = "rec_xxxxxxxxxxxx";
+const isDeleted = await myDomain.deleteRecordFromId(recordId);
+
+// If no error, `isDeleted` is true.
+``` 
+
 ### Create DNS record
 
 Create a new DNS record in this domain.
@@ -220,7 +243,7 @@ Every parameters are optional.
 **By the way, you can't change the type of a DNS record.**
 
 ```typescript
-// This will update ONLY the value of the DNS record.
+// This will update the value of the DNS record.
 const updatedRecord = await myRecord.update({
   value: "127.0.0.2",
   // name: string,

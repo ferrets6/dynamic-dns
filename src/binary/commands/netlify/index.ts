@@ -74,11 +74,10 @@ export default async function handleCommand (args: string[]) {
         `Can't get your current public IP for ${dnsType} DNS type.`
       );
     }
+    const zone = await api.getDnsZoneFromId(zoneId);
+    const record = await zone.getDnsRecordFromId(dnsRecordId);
 
     try {
-      const zone = await api.getDnsZoneFromId(zoneId);
-      const record = await zone.getDnsRecordFromId(dnsRecordId);
-
       // Delete the record.
       await record.delete();
 
@@ -93,7 +92,15 @@ export default async function handleCommand (args: string[]) {
       return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
     }
     catch (e) {
-      return console.error("Failed to update. Error thrown:\n", e);
+      // Revert deletion.
+      await zone.createDnsRecord({
+        hostname: record.rawData.hostname,
+        value: record.rawData.value,
+        type: record.rawData.type,
+        ttl: record.rawData.ttl
+      });
+
+      return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
     }
   }
   /** dynamic-dns netlify --token ... listZones --account-slug "myAccountSlug" */
@@ -122,6 +129,7 @@ export default async function handleCommand (args: string[]) {
 
     return console.log(header + content);
   }
+  /** dynamic-dns netlify --token ... listRecords [ZONE_ID] */
   case "listRecords": {
     const [zoneId] = commandArguments;
 

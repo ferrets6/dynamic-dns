@@ -1,12 +1,13 @@
-import type { Got } from "got";
-import VercelDnsRecordsApi from "./DnsRecord.js";
 import type { VercelApiBrowseProps } from "./types/VercelApi.js";
+import type { VercelDnsRecord } from "./types/VercelDnsRecord.js";
+import type { Got } from "got";
 import type {
   VercelDomain,
   VercelDomainCreateDnsRecordProps,
   VercelDomainListDnsRecordsResponse
 } from "./types/VercelDomain.js";
 
+import VercelDnsRecordsApi from "./DnsRecord.js";
 import handleError from "./utils/errorHandler.js";
 
 class VercelDomainsApi {
@@ -83,6 +84,33 @@ class VercelDomainsApi {
   public async delete () {
     try {
       const { statusCode } = await this.api.delete(`v6/domains/${this.rawData.name}`);
+
+      if (statusCode === 200) return true;
+      return false;
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+
+  public async updateRecordFromId (recordId: string, options: VercelDomainCreateDnsRecordProps) {
+    try {
+      const record = await this.api.patch(`v4/domains/records/${recordId}`, {
+        json: options
+      }).json<VercelDnsRecord>();
+
+      return new VercelDnsRecordsApi(this.api, record, this.rawData);
+    }
+    catch (error) {
+      handleError(error);
+      throw error;
+    }
+  }
+
+  public async deleteRecordFromId (recordId: string) {
+    try {
+      const { statusCode } = await this.api.delete(`v2/domains/${this.rawData.name}/records/${recordId}`);
 
       if (statusCode === 200) return true;
       return false;
