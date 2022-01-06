@@ -1,5 +1,5 @@
 {
-  "name": "dynamic-dns",
+  "name": "@vexcited/dynamic-dns",
   "version": "1.0.0",
   "description": "API and CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and maybe more in the future.",
   "module": "./dist/index.js",
