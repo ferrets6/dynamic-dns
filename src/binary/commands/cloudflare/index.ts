@@ -177,7 +177,6 @@ export default async function handleCommand (args: string[]) {
 
     return console.log(message);
   }
-  case "help":
   default:
     return console.info(helpMessage);
   }
