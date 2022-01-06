@@ -1,19 +1,14 @@
 {
   "name": "dynamic-dns",
   "version": "1.0.0",
-  "description": "Package with integrated CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and more.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "description": "API and CLI to dynamically update your DNS for Cloudflare, Namecheap, Netlify, Vercel, and maybe more in the future.",
+  "module": "./dist/index.js",
   "exports": {
-    ".": "./dist/index.js"
-  },
-  "typesVersions": {
-    "*": {
-      "index.d.ts": [
-        "./dist/index.d.ts"
-      ]
+    ".": {
+      "default": "./dist/index.js"
     }
   },
+  "typings":  "./dist/index.d.ts",
   "type": "module",
   "bin": {
     "dynamic-dns": "dist/binary/main.js"
