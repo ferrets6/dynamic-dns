@@ -10,19 +10,19 @@ You can install this module **globally** or **in a specific project**.
 
 ```bash
 # With Yarn
-yarn global add dynamic-dns
+yarn global add @vexcited/dynamic-dns
 
 # With NPM
-npm install --global dynamic-dns
+npm install --global @vexcited/dynamic-dns
 ```
 
 ### Install in a specific project
 ```bash
 # With Yarn
-yarn add dynamic-dns
+yarn add @vexcited/dynamic-dns
 
 # With NPM
-npm install --save dynamic-dns
+npm install --save @vexcited/dynamic-dns
 ```
 
 ## CLI

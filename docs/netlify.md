@@ -2,10 +2,10 @@
 
 ```typescript
 // CommonJS
-const { NetlifyApi } = require("dynamic-dns");
+const { NetlifyApi } = require("@vexcited/dynamic-dns");
 
 // ESM
-import { NetlifyApi } from "dynamic-dns";
+import { NetlifyApi } from "@vexcited/dynamic-dns";
 ```
 
 ## Configure your Netlify DNS

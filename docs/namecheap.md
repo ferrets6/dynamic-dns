@@ -2,10 +2,10 @@
 
 ```typescript
 // CommonJS
-const { NamecheapApi } = require("dynamic-dns");
+const { NamecheapApi } = require("@vexcited/dynamic-dns");
 
 // ESM
-import { NamecheapApi } from "dynamic-dns";
+import { NamecheapApi } from "@vexcited/dynamic-dns";
 ```
 
 ## Configure your Namecheap DNS

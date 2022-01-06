@@ -2,10 +2,10 @@
 
 ```typescript
 // CommonJS
-const { CloudflareApi } = require("dynamic-dns");
+const { CloudflareApi } = require("@vexcited/dynamic-dns");
 
 // ESM
-import { CloudflareApi } from "dynamic-dns";
+import { CloudflareApi } from "@vexcited/dynamic-dns";
 ```
 
 ## Set-up the Cloudflare Provider

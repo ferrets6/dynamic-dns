@@ -2,10 +2,10 @@
 
 ```typescript
 // CommonJS
-const { VercelApi } = require("dynamic-dns");
+const { VercelApi } = require("@vexcited/dynamic-dns");
 
 // ESM
-import { VercelApi } from "dynamic-dns";
+import { VercelApi } from "@vexcited/dynamic-dns";
 ```
 
 ## Configure your Vercel DNS
