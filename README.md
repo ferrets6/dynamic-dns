@@ -47,7 +47,7 @@ sudo npm install --global PM2
 
 # Run a new PM2 app with cron task (every 5 minutes).
 # This is an example using the Cloudflare provider.
-pm2 start npx --cron "*/5 * * * *" --name "example.com-ddns" -- dynamic-dns cloudflare --token TOKEN_XXXXXXXXXXXX update ZONE_ID_XXXXXXX RECORD_ID_XXXXXXX --cloudflare-proxied 1
+pm2 start npx --cron-restart="*/5 * * * *" --name "example.com-ddns" --no-autorestart -- dynamic-dns cloudflare --token TOKEN_XXXXXXXXXXXX update ZONE_ID_XXXXXXX RECORD_ID_XXXXXXX --cloudflare-proxied 1
 
 # Check if running.
 pm2 list
