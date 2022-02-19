@@ -37,6 +37,25 @@ Execute a command on a provider using the following command.
 
 `$ dynamic-dns [provider] [command] [...arguments]`
 
+### Cron with PM2
+
+Example usage with PM2 to perform a cron task.
+
+```bash
+# Install PM2 globally.
+sudo npm install --global PM2
+
+# Run a new PM2 app with cron task (every 5 minutes).
+# This is an example using the Cloudflare provider.
+pm2 start npx --cron "*/5 * * * *" --name "example.com-ddns" -- dynamic-dns cloudflare --token TOKEN_XXXXXXXXXXXX update ZONE_ID_XXXXXXX RECORD_ID_XXXXXXX --cloudflare-proxied 1
+
+# Check if running.
+pm2 list
+
+# Look logs.
+pm2 logs
+```
+
 ### Supported providers
 
 You can show the help message for each providers.
