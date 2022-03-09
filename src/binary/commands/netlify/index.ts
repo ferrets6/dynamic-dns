@@ -103,6 +103,84 @@ export default async function handleCommand (args: string[]) {
       return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
     }
   }
+  case "updateByHostname": {
+    const [zoneId, dnsHostname] = commandArguments;
+    const options = parseOptions(commandArguments.slice(2));
+
+    // Check if ZONE_ID and DNS_RECORD_ID was given.
+    if (!zoneId || !dnsHostname) {
+      return console.error(
+        "You must give ZONE_ID and then DNS_HOSTNAME in the command.\n"
+        + `Usage: ${basicTokenUsage} update ZONE_ID DNS_HOSTNAME`
+      );
+    }
+
+    /**
+     * `--dns-type`: Defaults to A.
+     * Only A and AAAA currently supported.
+     */
+    const dnsType = (options.dnsType as string | undefined) || "A";
+    const supportedDnsTypes = ["A", "AAAA"];
+    if (!supportedDnsTypes.includes(dnsType)) return console.error(
+      `Currently, only ${sentenceFromArray(supportedDnsTypes)} record types are available.`
+    );
+
+    /**
+     * `--ip`: Defaults to current public IPv4.
+     * Using `public-ip` module to get the public IP.
+     */
+    let ip = options.ip;
+    if (!ip && (dnsType === "A" || dnsType === "AAAA")) {
+      if (dnsType === "A") ip = await publicIp.v4();
+      else if (dnsType === "AAAA") ip = await publicIp.v6();
+      else return console.error(
+        `Can't get your current public IP for ${dnsType} DNS type.`
+      );
+    }
+    const zone = await api.getDnsZoneFromId(zoneId);
+
+    const {
+      records,
+      resultInfo: {
+        count: resultCount
+      }
+    } = await zone.getDnsRecords();
+
+    if (resultCount == 0)
+      return console.error(`No records found in zone ${zoneId}`);
+    
+    const record = records
+      .find(({ rawData: record }) => record.hostname === dnsHostname);
+
+    if(!record)
+      return console.error(`No record found with hostname ${dnsHostname}`);
+
+    try {
+      // Delete the record.
+      await record.delete();
+
+      // Re-create a new record with updated parameters.
+      const newRecord = await zone.createDnsRecord({
+        hostname: record.rawData.hostname,
+        type: dnsType as "A" | "AAAA",
+        ttl: record.rawData.ttl,
+        value: ip as string
+      });
+
+      return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+    }
+    catch (e) {
+      // Revert deletion.
+      await zone.createDnsRecord({
+        hostname: record.rawData.hostname,
+        value: record.rawData.value,
+        type: record.rawData.type,
+        ttl: record.rawData.ttl
+      });
+
+      return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
+    }
+  }
   /** dynamic-dns netlify --token ... listZones --account-slug "myAccountSlug" */
   case "listZones": {
     const options = parseOptions(commandArguments);
@@ -143,7 +221,7 @@ export default async function handleCommand (args: string[]) {
 
     const header = `Listing ${resultCount} records in zone ${zoneId}.\n\n`;
     const content = records
-      .map(({ rawData: record }) => `* ${record.hostname} (${record.id})`)
+      .map(({ rawData: record }) => `* ${record.hostname} - ${record.id} (${record.value})`)
       .join("\n");
 
     return console.log(header + content);
