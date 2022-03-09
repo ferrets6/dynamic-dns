@@ -16,6 +16,9 @@ Commands:
   * update [ZONE_ID] [DNS_RECORD_ID] => Update a DNS record in a specific zone.
     - [--ip X.X.X.X] => Optional: DNS record IP. Defaults to your public IPv4.
     - [--dns-type A|AAAA] => Optional: DNS record type. Defaults to A (IPv4).
+  * updateByHostname [ZONE_ID] [DNS_HOSTNAME] => Update a DNS record in a specific zone.
+    - [--ip X.X.X.X] => Optional: DNS record IP. Defaults to your public IPv4.
+    - [--dns-type A|AAAA] => Optional: DNS record type. Defaults to A (IPv4).
   * listZones => List DNS zones.
     - [--account-slug "myAccountSlug"] => Filter with an account slug.
   * listRecords [ZONE_ID] => List DNS records of a specific zone.
