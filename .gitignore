@@ -39,3 +39,4 @@ pids
 
 # Yarn Integrity file
 .yarn-integrity
+dynamic-dns-script.sh
