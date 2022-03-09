@@ -8,7 +8,7 @@
       "default": "./dist/index.js"
     }
   },
-  "typings":  "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "type": "module",
   "bin": {
     "dynamic-dns": "dist/binary/main.js"
