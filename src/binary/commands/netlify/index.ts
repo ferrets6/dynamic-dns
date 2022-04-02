@@ -93,7 +93,7 @@ export default async function handleCommand (args: string[]) {
           value: ip as string
         });
 
-        return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+        return console.info(`${dnsRecordId} - Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
       }
       catch (e) {
         // Revert deletion.
@@ -108,7 +108,7 @@ export default async function handleCommand (args: string[]) {
       }
     }
     else
-      return console.info(`Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
+      return console.info(`${dnsRecordId} - Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
   }
   case "updateByHostname": {
     const [zoneId, dnsHostname] = commandArguments;
@@ -175,7 +175,7 @@ export default async function handleCommand (args: string[]) {
           value: ip as string
         });
 
-        return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+        return console.info(`${dnsHostname} - Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
       }
       catch (e) {
         // Revert deletion.
@@ -190,7 +190,7 @@ export default async function handleCommand (args: string[]) {
       }
     }
     else
-      return console.info(`Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
+      return console.info(`${dnsHostname} Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
   }
   /** dynamic-dns netlify --token ... listZones --account-slug "myAccountSlug" */
   case "listZones": {
