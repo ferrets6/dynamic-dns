@@ -155,7 +155,7 @@ export default async function handleCommand (args: string[]) {
 
     if (resultCount == 0)
       return console.error(`No records found in zone ${zoneId}`);
-      
+
     const record = records
       .find(({ rawData: record }) => record.hostname === dnsHostname);
 
