@@ -80,31 +80,35 @@ export default async function handleCommand (args: string[]) {
     const zone = await api.getDnsZoneFromId(zoneId);
     const record = await zone.getDnsRecordFromId(dnsRecordId);
 
-    try {
-      // Delete the record.
-      await record.delete();
+    if (record.rawData.value != ip) {
+      try {
+        // Delete the record.
+        await record.delete();
 
-      // Re-create a new record with updated parameters.
-      const newRecord = await zone.createDnsRecord({
-        hostname: record.rawData.hostname,
-        type: dnsType as "A" | "AAAA",
-        ttl: record.rawData.ttl,
-        value: ip as string
-      });
+        // Re-create a new record with updated parameters.
+        const newRecord = await zone.createDnsRecord({
+          hostname: record.rawData.hostname,
+          type: dnsType as "A" | "AAAA",
+          ttl: record.rawData.ttl,
+          value: ip as string
+        });
 
-      return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+        return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+      }
+      catch (e) {
+        // Revert deletion.
+        await zone.createDnsRecord({
+          hostname: record.rawData.hostname,
+          value: record.rawData.value,
+          type: record.rawData.type,
+          ttl: record.rawData.ttl
+        });
+
+        return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
+      }
     }
-    catch (e) {
-      // Revert deletion.
-      await zone.createDnsRecord({
-        hostname: record.rawData.hostname,
-        value: record.rawData.value,
-        type: record.rawData.type,
-        ttl: record.rawData.ttl
-      });
-
-      return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
-    }
+    else
+      return console.info(`Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
   }
   case "updateByHostname": {
     const [zoneId, dnsHostname] = commandArguments;
@@ -143,46 +147,50 @@ export default async function handleCommand (args: string[]) {
     const zone = await api.getDnsZoneFromId(zoneId);
 
     const {
-      records,
       resultInfo: {
         count: resultCount
-      }
+      },
+      records
     } = await zone.getDnsRecords();
 
     if (resultCount == 0)
       return console.error(`No records found in zone ${zoneId}`);
-
+      
     const record = records
       .find(({ rawData: record }) => record.hostname === dnsHostname);
 
     if(!record)
       return console.error(`No record found with hostname ${dnsHostname}`);
 
-    try {
-      // Delete the record.
-      await record.delete();
+    if (record.rawData.value != ip) {
+      try {
+        // Delete the record.
+        await record.delete();
 
-      // Re-create a new record with updated parameters.
-      const newRecord = await zone.createDnsRecord({
-        hostname: record.rawData.hostname,
-        type: dnsType as "A" | "AAAA",
-        ttl: record.rawData.ttl,
-        value: ip as string
-      });
+        // Re-create a new record with updated parameters.
+        const newRecord = await zone.createDnsRecord({
+          hostname: record.rawData.hostname,
+          type: dnsType as "A" | "AAAA",
+          ttl: record.rawData.ttl,
+          value: ip as string
+        });
 
-      return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+        return console.info(`Update from ${record.rawData.value} to ${newRecord.rawData.value} succeed`);
+      }
+      catch (e) {
+        // Revert deletion.
+        await zone.createDnsRecord({
+          hostname: record.rawData.hostname,
+          value: record.rawData.value,
+          type: record.rawData.type,
+          ttl: record.rawData.ttl
+        });
+
+        return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
+      }
     }
-    catch (e) {
-      // Revert deletion.
-      await zone.createDnsRecord({
-        hostname: record.rawData.hostname,
-        value: record.rawData.value,
-        type: record.rawData.type,
-        ttl: record.rawData.ttl
-      });
-
-      return console.error("Failed to update. Re-created deleted record. Error thrown:\n", e);
-    }
+    else
+      return console.info(`Nothing to update. Remote IP: ${record.rawData.value}, Local IP: ${ip}`);
   }
   /** dynamic-dns netlify --token ... listZones --account-slug "myAccountSlug" */
   case "listZones": {

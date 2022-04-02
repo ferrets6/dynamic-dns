@@ -6,7 +6,8 @@ import type {
 
   NetlifyApiDnsZoneGetDnsRecordsResponse,
 
-  NetlifyApiDnsZoneGetDnsRecordFromIdResponse
+  NetlifyApiDnsZoneGetDnsRecordFromIdResponse,
+  NetlifyDnsRecord
 } from "./types/NetlifyDnsRecord.js";
 
 import NetlifyApiDnsRecord from "./DnsRecord.js";
@@ -30,7 +31,7 @@ class NetlifyApiDnsZone {
       resultInfo: {
         count: body.length
       },
-      records: body.map(record => new NetlifyApiDnsRecord(this.api, record))
+      records: body.map((record: NetlifyDnsRecord) => new NetlifyApiDnsRecord(this.api, record))
     };
   }
 
