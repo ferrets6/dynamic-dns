@@ -118,7 +118,7 @@ export default async function handleCommand (args: string[]) {
     if (!zoneId || !dnsHostname) {
       return console.error(
         "You must give ZONE_ID and then DNS_HOSTNAME in the command.\n"
-        + `Usage: ${basicTokenUsage} update ZONE_ID DNS_HOSTNAME`
+        + `Usage: ${basicTokenUsage} updateByHostname ZONE_ID DNS_HOSTNAME`
       );
     }
 
